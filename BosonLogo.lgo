@@ -19,5 +19,6 @@ setpensize 1.35
 setbackground "#161275
 setpencolor 4
 for [a 10 300 10] [circle :a]
-repeat 46[repeat 36[fd 50 rt 10] lt random 50 randomcolor]
+repeat 75[ make "b (random 20 40) make "c (random 2 5) repeat 8 [fd :b rt :c] pu home pd lt random 360 randomcolor]
+repeat 75[ make "b (random 20 40) make "c (random 2 5) repeat 8 [fd :b lt :c] pu home pd rt random 360 randomcolor]
 ht
