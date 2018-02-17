@@ -1,0 +1,23 @@
+
+to circle :radius
+  pu
+  fd :radius rt 90
+  pd
+  repeat 360 [fd (3.1416 * 2 * :radius) / 360 rt 1]
+  pu lt 90 
+  bk :radius 
+  pd
+end
+
+to randomcolor
+  setcolor pick [yellow orange green white]
+end
+
+clearscreen
+home
+setpensize 1.35
+setbackground "#161275
+setpencolor 4
+for [a 10 300 10] [circle :a]
+repeat 46[repeat 36[fd 50 rt 10] lt random 50 randomcolor]
+ht
