@@ -13,12 +13,13 @@ import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.stream.StreamSupport;
 
-public class StackExchangeApiService {
+public class StackExchangeApiService extends ApiService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StackExchangeApiService.class);
 
     private String apiKey;
     private String apiToken;
+    private final String API_URL = "https://api.stackexchange.com/2.2";
 
     public StackExchangeApiService() {
         PropertyService service = new PropertyService();
@@ -37,13 +38,10 @@ public class StackExchangeApiService {
     }
 
 
-    public Answer[] getAnswers(String site, int page, int pageSize, Instant fromDate) throws IOException {
-        return getAnswers(site, page, pageSize, fromDate, Instant.now(), PostOrdering.DESC, PostSorting.ACTIVITY);
-    }
-
+    @Override
     public Answer[] getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, PostSorting sort) throws IOException {
         String filter = "!LVBj2-meNpvsiW3UvI3lD(";
-        String answersUrl = "https://api.stackexchange.com/2.2/answers";
+        String answersUrl = API_URL + "/answers";
         JsonObject json =  HttpRequestUtils.get(answersUrl,
                 "order",order.name(),
                 "sort",sort.name(),
