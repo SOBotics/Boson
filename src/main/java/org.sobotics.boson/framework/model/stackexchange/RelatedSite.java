@@ -62,7 +62,4 @@ public class RelatedSite {
                 '}';
     }
 
-    public RelatedSite getRelatedSiteFromJson(JsonObject json){
-        return new Gson().fromJson(json, RelatedSite.class);
-    }
 }
