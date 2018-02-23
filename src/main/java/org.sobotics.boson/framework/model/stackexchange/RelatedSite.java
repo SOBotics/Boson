@@ -1,5 +1,6 @@
 package org.sobotics.boson.framework.model.stackexchange;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class RelatedSite {
@@ -61,12 +62,7 @@ public class RelatedSite {
                 '}';
     }
 
-    public RelatedSite getRelatedSiteFromJson(JsonObject relatedSite){
-        RelatedSite site = new RelatedSite();
-        site.setName(relatedSite.has("name")?relatedSite.get("name").getAsString():"");
-        site.setRelation(relatedSite.has("relation")?relatedSite.get("relation").getAsString():"");
-        site.setSiteUrl(relatedSite.has("site_url")?relatedSite.get("site_url").getAsString():"");
-        site.setApiSiteParameter(relatedSite.has("api_site_parameter")?relatedSite.get("api_site_parameter").getAsString():"");
-        return site;
+    public RelatedSite getRelatedSiteFromJson(JsonObject json){
+        return new Gson().fromJson(json, RelatedSite.class);
     }
 }
