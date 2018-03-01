@@ -4,6 +4,7 @@ import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
+import org.sobotics.boson.framework.model.stackexchange.Question;
 import org.sobotics.boson.framework.model.stackexchange.api.PostOrdering;
 import org.sobotics.boson.framework.model.stackexchange.api.PostSorting;
 import org.sobotics.boson.framework.utils.HttpRequestUtils;
@@ -60,6 +61,28 @@ public class StackExchangeApiService extends ApiService{
         System.out.println(json);
         System.out.println(array.get(0).getAsJsonObject());
         return  getObjectFromJson(array, Answer.class);
+    }
+
+    @Override
+    public List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, PostSorting sort) throws IOException {
+        String filter = "!)5KmYd6AIAe7rRRfKQY65WhiSpIV";
+        String answersUrl = API_URL + "/questions";
+        JsonObject json =  HttpRequestUtils.get(answersUrl,
+                "order",order.name(),
+                "sort",sort.name(),
+                "filter",filter,
+                "page",Integer.toString(page),
+                "pagesize",Integer.toString(pageSize),
+                "fromdate",String.valueOf(fromDate.getEpochSecond()),
+                "todate",String.valueOf(toDate.getEpochSecond()),
+                "site",site,
+                "key",apiKey,
+                "access_token",apiToken);
+        handleBackoff(json);
+        JsonArray array = json.get("items").getAsJsonArray();
+        System.out.println(json);
+        System.out.println(array.get(0).getAsJsonObject());
+        return  getObjectFromJson(array, Question.class);
     }
 
     private <T> List<T> getObjectFromJson(JsonArray array, Class<T> classOfT) {
