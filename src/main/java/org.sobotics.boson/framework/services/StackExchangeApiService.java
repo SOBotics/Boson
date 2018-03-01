@@ -11,6 +11,8 @@ import org.sobotics.boson.framework.utils.HttpRequestUtils;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class StackExchangeApiService extends ApiService{
@@ -39,7 +41,7 @@ public class StackExchangeApiService extends ApiService{
 
 
     @Override
-    public Answer[] getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, PostSorting sort) throws IOException {
+    public List<Answer> getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, PostSorting sort) throws IOException {
         String filter = "!LVBj2-meNpvsiW3UvI3lD(";
         String answersUrl = API_URL + "/answers";
         JsonObject json =  HttpRequestUtils.get(answersUrl,
@@ -57,6 +59,10 @@ public class StackExchangeApiService extends ApiService{
         JsonArray array = json.get("items").getAsJsonArray();
         System.out.println(json);
         System.out.println(array.get(0).getAsJsonObject());
+        return  getObjectFromJson(array, Answer.class);
+    }
+
+    private <T> List<T> getObjectFromJson(JsonArray array, Class<T> classOfT) {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).
                 registerTypeAdapter(Instant.class, new JsonDeserializer<Instant>() {
                     @Override
@@ -64,7 +70,7 @@ public class StackExchangeApiService extends ApiService{
                         return Instant.ofEpochSecond(json.getAsJsonPrimitive().getAsLong());
                     }
                 }).create();
-        return StreamSupport.stream(array.spliterator(),false).map(j->gson.fromJson(j.getAsJsonObject(), Answer.class)).toArray(Answer[]::new);
+        return StreamSupport.stream(array.spliterator(), false).map(j -> gson.fromJson(j.getAsJsonObject(), classOfT)).collect(Collectors.toList());
     }
 
     private void handleBackoff(JsonObject root) {

@@ -6,16 +6,12 @@ import org.sobotics.boson.framework.model.stackexchange.api.PostSorting;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 
 public class ApiCacheApiService extends ApiService {
 
     @Override
-    public Answer[] getAnswers(String site, int page, int pageSize, Instant fromDate) throws IOException {
-        return new Answer[0];
-    }
-
-    @Override
-    public Answer[] getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, PostSorting sort) throws IOException {
-        return new Answer[0];
+    public List<Answer> getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, PostSorting sort) throws IOException {
+        return null;
     }
 }
