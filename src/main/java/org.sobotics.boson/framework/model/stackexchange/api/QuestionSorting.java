@@ -1,7 +1,10 @@
 package org.sobotics.boson.framework.model.stackexchange.api;
 
-public enum PostSorting {
+public enum QuestionSorting {
     ACTIVITY,
     CREATION,
-    VOTES
+    VOTES,
+    HOT,
+    WEEK,
+    MONTH
 }

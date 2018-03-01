@@ -3,10 +3,15 @@ package org.sobotics.boson.framework.services;
 import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sobotics.boson.framework.exceptions.StackExchangeApiException;
+import org.sobotics.boson.framework.exceptions.TypeSizeExceededException;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
+import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.model.stackexchange.Question;
+import org.sobotics.boson.framework.model.stackexchange.api.CommentSorting;
 import org.sobotics.boson.framework.model.stackexchange.api.PostOrdering;
-import org.sobotics.boson.framework.model.stackexchange.api.PostSorting;
+import org.sobotics.boson.framework.model.stackexchange.api.AnswerSorting;
+import org.sobotics.boson.framework.model.stackexchange.api.QuestionSorting;
 import org.sobotics.boson.framework.utils.HttpRequestUtils;
 
 import java.io.IOException;
@@ -42,7 +47,7 @@ public class StackExchangeApiService extends ApiService{
 
 
     @Override
-    public List<Answer> getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, PostSorting sort) throws IOException {
+    public List<Answer> getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, AnswerSorting sort) throws IOException {
         String filter = "!LVBj2-meNpvsiW3UvI3lD(";
         String answersUrl = API_URL + "/answers";
         JsonObject json =  HttpRequestUtils.get(answersUrl,
@@ -64,9 +69,40 @@ public class StackExchangeApiService extends ApiService{
     }
 
     @Override
-    public List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, PostSorting sort) throws IOException {
+    public List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, QuestionSorting sort, String[] tags) throws IOException, StackExchangeApiException {
+
+
+        if (tags.length>5){
+            throw new TypeSizeExceededException("Only 5 tags are allowed");
+        }
+
+        String tagString = String.join(";", tags);
+
         String filter = "!)5KmYd6AIAe7rRRfKQY65WhiSpIV";
         String answersUrl = API_URL + "/questions";
+        JsonObject json =  HttpRequestUtils.get(answersUrl,
+                "order",order.name(),
+                "sort",sort.name(),
+                "filter",filter,
+                "page",Integer.toString(page),
+                "pagesize",Integer.toString(pageSize),
+                "fromdate",String.valueOf(fromDate.getEpochSecond()),
+                "todate",String.valueOf(toDate.getEpochSecond()),
+                "site",site,
+                "tags",tagString,
+                "key",apiKey,
+                "access_token",apiToken);
+        handleBackoff(json);
+        JsonArray array = json.get("items").getAsJsonArray();
+        System.out.println(json);
+        System.out.println(array.get(0).getAsJsonObject());
+        return  getObjectFromJson(array, Question.class);
+    }
+
+    @Override
+    public List<Comment> getComments(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, CommentSorting sort) throws IOException {
+        String filter = "!-*jbN*LhFh6F";
+        String answersUrl = API_URL + "/comments";
         JsonObject json =  HttpRequestUtils.get(answersUrl,
                 "order",order.name(),
                 "sort",sort.name(),
@@ -82,7 +118,7 @@ public class StackExchangeApiService extends ApiService{
         JsonArray array = json.get("items").getAsJsonArray();
         System.out.println(json);
         System.out.println(array.get(0).getAsJsonObject());
-        return  getObjectFromJson(array, Question.class);
+        return  getObjectFromJson(array, Comment.class);
     }
 
     private <T> List<T> getObjectFromJson(JsonArray array, Class<T> classOfT) {
