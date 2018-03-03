@@ -1,10 +1,8 @@
 package org.sobotics.boson;
 
-import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
-import org.sobotics.boson.framework.model.stackexchange.Question;
-import org.sobotics.boson.framework.services.ApiService;
-import org.sobotics.boson.framework.services.StackExchangeApiService;
+import org.sobotics.boson.framework.services.data.ApiService;
+import org.sobotics.boson.framework.services.data.StackExchangeApiService;
 
 import java.io.IOException;
 import java.time.Instant;

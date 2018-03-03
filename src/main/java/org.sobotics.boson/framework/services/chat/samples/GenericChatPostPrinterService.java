@@ -1,4 +1,4 @@
-package org.sobotics.boson.framework.services.chat;
+package org.sobotics.boson.framework.services.chat.samples;
 
 import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
