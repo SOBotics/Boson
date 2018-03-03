@@ -4,10 +4,10 @@ import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.model.stackexchange.Question;
 
-public class genericChatPostPrinterService {
+public class GenericChatPostPrinterService {
     private String sitename;
 
-    public genericChatPostPrinterService(String sitename) {
+    public GenericChatPostPrinterService(String sitename) {
         this.sitename = sitename;
     }
 
