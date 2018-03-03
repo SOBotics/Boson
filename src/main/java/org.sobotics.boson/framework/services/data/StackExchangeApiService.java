@@ -8,9 +8,9 @@ import org.sobotics.boson.framework.exceptions.TypeSizeExceededException;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.model.stackexchange.Question;
+import org.sobotics.boson.framework.model.stackexchange.api.AnswerSorting;
 import org.sobotics.boson.framework.model.stackexchange.api.CommentSorting;
 import org.sobotics.boson.framework.model.stackexchange.api.PostOrdering;
-import org.sobotics.boson.framework.model.stackexchange.api.AnswerSorting;
 import org.sobotics.boson.framework.model.stackexchange.api.QuestionSorting;
 import org.sobotics.boson.framework.services.PropertyService;
 import org.sobotics.boson.framework.utils.HttpRequestUtils;
@@ -51,14 +51,16 @@ public class StackExchangeApiService extends ApiService{
     public List<Answer> getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, AnswerSorting sort) throws IOException {
         String filter = "!LVBj2-meNpvsiW3UvI3lD(";
         String answersUrl = API_URL + "/answers";
+        final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
+        final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
         JsonObject json =  HttpRequestUtils.get(answersUrl,
                 "order",order.name(),
                 "sort",sort.name(),
                 "filter",filter,
                 "page",Integer.toString(page),
                 "pagesize",Integer.toString(pageSize),
-                "fromdate",String.valueOf(fromDate.getEpochSecond()),
-                "todate",String.valueOf(toDate.getEpochSecond()),
+                "fromdate", fromDateString,
+                "todate", toDateString,
                 "site",site,
                 "key",apiKey,
                 "access_token",apiToken);
@@ -80,15 +82,17 @@ public class StackExchangeApiService extends ApiService{
         String tagString = String.join(";", tags);
 
         String filter = "!)5KmYd6AIAe7rRRfKQY65WhiSpIV";
-        String answersUrl = API_URL + "/questions";
-        JsonObject json =  HttpRequestUtils.get(answersUrl,
+        String questionsUrl = API_URL + "/questions";
+        final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
+        final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
+        JsonObject json =  HttpRequestUtils.get(questionsUrl,
                 "order",order.name(),
                 "sort",sort.name(),
                 "filter",filter,
                 "page",Integer.toString(page),
                 "pagesize",Integer.toString(pageSize),
-                "fromdate",String.valueOf(fromDate.getEpochSecond()),
-                "todate",String.valueOf(toDate.getEpochSecond()),
+                "fromdate",fromDateString,
+                "todate",toDateString,
                 "site",site,
                 "tags",tagString,
                 "key",apiKey,
@@ -103,15 +107,17 @@ public class StackExchangeApiService extends ApiService{
     @Override
     public List<Comment> getComments(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, CommentSorting sort) throws IOException {
         String filter = "!-*jbN*LhFh6F";
-        String answersUrl = API_URL + "/comments";
-        JsonObject json =  HttpRequestUtils.get(answersUrl,
+        String commentsUrl = API_URL + "/comments";
+        final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
+        final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
+        JsonObject json =  HttpRequestUtils.get(commentsUrl,
                 "order",order.name(),
                 "sort",sort.name(),
                 "filter",filter,
                 "page",Integer.toString(page),
                 "pagesize",Integer.toString(pageSize),
-                "fromdate",String.valueOf(fromDate.getEpochSecond()),
-                "todate",String.valueOf(toDate.getEpochSecond()),
+                "fromdate",fromDateString,
+                "todate",toDateString,
                 "site",site,
                 "key",apiKey,
                 "access_token",apiToken);
