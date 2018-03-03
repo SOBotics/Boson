@@ -3,7 +3,7 @@ package org.sobotics.boson.framework.model.stackexchange;
 import java.time.Instant;
 import java.util.Arrays;
 
-public class Question{
+public class Question implements Content{
 
     private int acceptedAnswerId;
     private int answerCount;
@@ -411,6 +411,11 @@ public class Question{
 
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
+    }
+
+    @Override
+    public String getType() {
+        return "question";
     }
 
     @Override

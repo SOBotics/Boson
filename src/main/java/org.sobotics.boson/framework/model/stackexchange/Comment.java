@@ -2,7 +2,7 @@ package org.sobotics.boson.framework.model.stackexchange;
 
 import java.time.Instant;
 
-public class Comment{
+public class Comment implements Content{
     private String body;
     private String bodyMarkdown;
     private boolean canFlag;
@@ -128,6 +128,11 @@ public class Comment{
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    @Override
+    public String getType() {
+        return "comment";
     }
 
     @Override

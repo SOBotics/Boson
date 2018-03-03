@@ -1,9 +1,10 @@
 package org.sobotics.boson.framework.model.stackexchange;
 
+
 import java.time.Instant;
 import java.util.Arrays;
 
-public class Answer{
+public class Answer implements Content{
 
     private int answerId;
     private int awardedBountyAmount;
@@ -250,6 +251,11 @@ public class Answer{
 
     public void setUpVoteCount(int upVoteCount) {
         this.upVoteCount = upVoteCount;
+    }
+
+    @Override
+    public String getType() {
+        return "answer";
     }
 
     @Override
