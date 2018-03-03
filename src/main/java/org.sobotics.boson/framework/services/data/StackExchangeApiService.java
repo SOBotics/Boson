@@ -1,4 +1,4 @@
-package org.sobotics.boson.framework.services;
+package org.sobotics.boson.framework.services.data;
 
 import com.google.gson.*;
 import org.slf4j.Logger;
@@ -12,6 +12,7 @@ import org.sobotics.boson.framework.model.stackexchange.api.CommentSorting;
 import org.sobotics.boson.framework.model.stackexchange.api.PostOrdering;
 import org.sobotics.boson.framework.model.stackexchange.api.AnswerSorting;
 import org.sobotics.boson.framework.model.stackexchange.api.QuestionSorting;
+import org.sobotics.boson.framework.services.PropertyService;
 import org.sobotics.boson.framework.utils.HttpRequestUtils;
 
 import java.io.IOException;

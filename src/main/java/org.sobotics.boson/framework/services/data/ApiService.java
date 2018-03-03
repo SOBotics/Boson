@@ -1,4 +1,4 @@
-package org.sobotics.boson.framework.services;
+package org.sobotics.boson.framework.services.data;
 
 import org.sobotics.boson.framework.exceptions.StackExchangeApiException;
 import org.sobotics.boson.framework.exceptions.TypeSizeExceededException;
