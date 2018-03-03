@@ -67,7 +67,6 @@ public class StackExchangeApiService extends ApiService{
         handleBackoff(json);
         JsonArray array = json.get("items").getAsJsonArray();
         System.out.println(json);
-        System.out.println(array.get(0).getAsJsonObject());
         return  getObjectFromJson(array, Answer.class);
     }
 
@@ -80,7 +79,6 @@ public class StackExchangeApiService extends ApiService{
         }
 
         String tagString = String.join(";", tags);
-
         String filter = "!)5KmYd6AIAe7rRRfKQY65WhiSpIV";
         String questionsUrl = API_URL + "/questions";
         final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
