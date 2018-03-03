@@ -1,25 +1,19 @@
 package org.sobotics.boson;
 
-import org.sobotics.boson.framework.model.stackexchange.Comment;
-import org.sobotics.boson.framework.services.data.ApiService;
-import org.sobotics.boson.framework.services.data.StackExchangeApiService;
-
-import java.io.IOException;
-import java.time.Instant;
-import java.util.List;
+import fr.tunaki.stackoverflow.chat.ChatHost;
+import fr.tunaki.stackoverflow.chat.Room;
+import fr.tunaki.stackoverflow.chat.StackExchangeClient;
+import org.sobotics.boson.framework.model.stackexchange.Answer;
+import org.sobotics.boson.framework.services.PropertyService;
+import org.sobotics.boson.sample.AnswerPrinterBot;
 
 public class Boson{
 
     public static void main(String[] args) {
-
-        ApiService apiService = new StackExchangeApiService("HYWHTHpYImfSRnhkArqu8Q((",
-                "Cm3XpScEriqPKpawx4Dc6A))");
-        try {
-            List<Comment> questions = apiService.getComments("stackoverflow", 1, 1, Instant.now().minusSeconds(100));
-            for(Comment question: questions)
-                System.out.println(question);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        PropertyService propertyService = new PropertyService();
+        StackExchangeClient client = new StackExchangeClient(propertyService.getProperty("email"), propertyService.getProperty("password"));
+        Room room = client.joinRoom(ChatHost.STACK_OVERFLOW, 165544);
+        AnswerPrinterBot<Answer> answerPrinterBot = new AnswerPrinterBot<>();
+        answerPrinterBot.start(room, "superuser");
     }
 }
