@@ -2,16 +2,23 @@ package org.sobotics.boson.sample;
 
 import fr.tunaki.stackoverflow.chat.Room;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
+import org.sobotics.boson.framework.model.stackexchange.Answer;
+import org.sobotics.boson.framework.services.chat.ChatRoomService;
+import org.sobotics.boson.framework.services.chat.commands.Alive;
 import org.sobotics.boson.framework.services.chat.commands.Command;
+import org.sobotics.boson.framework.services.chat.filters.EmptyFilter;
+import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventListener;
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
-import org.sobotics.boson.sample.commands.Alive;
+import org.sobotics.boson.framework.services.chat.monitors.AnswerMonitor;
+import org.sobotics.boson.framework.services.chat.monitors.Monitor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SampleRoom {
-    public ChatRoom getSampleRoom(Room room){
+public class AnswerPrinterBot {
+
+    public void start(Room room, String site, int frequency){
         ChatRoom chatRoom = new ChatRoom(room.getRoomId(), room.getHost(), room);
 
         Map<Command, Object[]> userMentionCommands = new HashMap<>();
@@ -23,8 +30,11 @@ public class SampleRoom {
         messageReplyCommands.put(new Alive(), new Object[0]);
         chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(room, messageReplyCommands));
 
+        Filter[]  filters = {new EmptyFilter<Answer>()};
+        Monitor[] monitors = {new AnswerMonitor(chatRoom, frequency, site, filters)};
 
+        ChatRoomService service = new ChatRoomService(chatRoom, monitors);
+        service.startService();
 
-        return chatRoom;
     }
 }
