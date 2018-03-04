@@ -19,7 +19,17 @@ import java.util.Map;
 
 public class AnswerPrinterBot {
 
-    public void start(Room room, String site, int frequency){
+    private Room room;
+    private String site;
+    private int frequency;
+
+    public AnswerPrinterBot(Room room, String site, int frequency) {
+        this.room = room;
+        this.site = site;
+        this.frequency = frequency;
+    }
+
+    public void start(){
         ChatRoom chatRoom = new ChatRoom(room.getRoomId(), room.getHost(), room);
 
         Map<Command, Object[]> userMentionCommands = new HashMap<>();
