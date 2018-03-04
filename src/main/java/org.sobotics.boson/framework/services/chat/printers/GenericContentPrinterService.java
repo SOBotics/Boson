@@ -1,11 +1,11 @@
-package org.sobotics.boson.framework.services.chat.samples;
+package org.sobotics.boson.framework.services.chat.printers;
 
 import org.sobotics.boson.framework.model.stackexchange.Content;
 
-public class GenericChatPostPrinterService<T extends Content> {
+public class GenericContentPrinterService<T extends Content> implements PrinterService<T>{
     private String sitename;
 
-    public GenericChatPostPrinterService(String sitename) {
+    public GenericContentPrinterService(String sitename) {
         this.sitename = sitename;
     }
 

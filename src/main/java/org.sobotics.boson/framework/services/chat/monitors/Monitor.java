@@ -2,6 +2,7 @@ package org.sobotics.boson.framework.services.chat.monitors;
 
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
+import org.sobotics.boson.framework.services.chat.printers.PrinterService;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -14,20 +15,22 @@ public abstract class Monitor <T>{
     private int frequency;
     private String site;
     private Filter<T> filters[];
+    private PrinterService<T> printer;
     private ScheduledExecutorService service;
 
-    public Monitor(ChatRoom room, int frequency, String site, Filter<T>[] filters) {
+    public Monitor(ChatRoom room, int frequency, String site, Filter<T>[] filters, PrinterService<T> printer) {
         this.room = room;
         this.frequency = frequency;
         this.site = site;
         this.filters = filters;
+        this.printer = printer;
         this.service = Executors.newSingleThreadScheduledExecutor();
     }
 
     public ScheduledExecutorService startMonitor(){
         Runnable runnable = () -> {
             try {
-                monitor(room, site, filters);
+                monitor(room, site, filters, printer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -37,5 +40,5 @@ public abstract class Monitor <T>{
         return service;
     }
 
-    protected abstract void monitor(ChatRoom room, String site, Filter<T> filters[]) throws IOException;
+    protected abstract void monitor(ChatRoom room, String site, Filter<T> filters[], PrinterService<T> printer) throws IOException;
 }

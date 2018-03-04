@@ -12,6 +12,7 @@ import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventLis
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
 import org.sobotics.boson.framework.services.chat.monitors.AnswerMonitor;
 import org.sobotics.boson.framework.services.chat.monitors.Monitor;
+import org.sobotics.boson.framework.services.chat.printers.GenericContentPrinterService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class AnswerPrinterBot {
         chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(room, messageReplyCommands));
 
         Filter[]  filters = {new EmptyFilter<Answer>()};
-        Monitor[] monitors = {new AnswerMonitor(chatRoom, frequency, site, filters)};
+        Monitor[] monitors = {new AnswerMonitor(chatRoom, frequency, site, filters, new GenericContentPrinterService<Answer>(site))};
 
         ChatRoomService service = new ChatRoomService(chatRoom, monitors);
         service.startService();

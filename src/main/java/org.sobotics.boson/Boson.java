@@ -13,6 +13,6 @@ public class Boson{
         StackExchangeClient client = new StackExchangeClient(propertyService.getProperty("email"), propertyService.getProperty("password"));
         Room room = client.joinRoom(ChatHost.STACK_EXCHANGE, 59667);
         AnswerPrinterBot answerPrinterBot = new AnswerPrinterBot();
-        answerPrinterBot.start(room, "interpersonal", 60);
+        answerPrinterBot.start(room, "interpersonal", 120);
     }
 }
