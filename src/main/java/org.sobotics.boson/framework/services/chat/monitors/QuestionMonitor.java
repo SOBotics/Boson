@@ -18,7 +18,7 @@ public class QuestionMonitor extends Monitor<Question>{
 
     public QuestionMonitor(ChatRoom room, int frequency, String site, Filter<Question>[] filters, PrinterService<Question> printer) {
         super(room, frequency, site, filters, printer);
-        previousTime = Instant.now().minusSeconds(60);
+        previousTime = Instant.now().minusSeconds(24*60*60); // 1 Day
     }
 
     @Override
