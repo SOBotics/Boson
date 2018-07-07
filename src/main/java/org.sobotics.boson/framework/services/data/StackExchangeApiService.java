@@ -10,7 +10,7 @@ import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.model.stackexchange.Question;
 import org.sobotics.boson.framework.model.stackexchange.api.AnswerSorting;
 import org.sobotics.boson.framework.model.stackexchange.api.CommentSorting;
-import org.sobotics.boson.framework.model.stackexchange.api.PostOrdering;
+import org.sobotics.boson.framework.model.stackexchange.api.Ordering;
 import org.sobotics.boson.framework.model.stackexchange.api.QuestionSorting;
 import org.sobotics.boson.framework.services.PropertyService;
 import org.sobotics.boson.framework.utils.HttpRequestUtils;
@@ -48,7 +48,7 @@ public class StackExchangeApiService extends ApiService{
 
 
     @Override
-    public List<Answer> getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, AnswerSorting sort) throws IOException {
+    public List<Answer> getAnswers(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, AnswerSorting sort) throws IOException {
         String filter = "!LVBj2-meNpvsiW3UvI3lD(";
         String answersUrl = API_URL + "/answers";
         final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
@@ -71,7 +71,7 @@ public class StackExchangeApiService extends ApiService{
     }
 
     @Override
-    public List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, QuestionSorting sort, String[] tags) throws IOException, StackExchangeApiException {
+    public List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, QuestionSorting sort, String[] tags) throws IOException, StackExchangeApiException {
 
 
         if (tags.length>5){
@@ -103,7 +103,7 @@ public class StackExchangeApiService extends ApiService{
     }
 
     @Override
-    public List<Comment> getComments(String site, int page, int pageSize, Instant fromDate, Instant toDate, PostOrdering order, CommentSorting sort) throws IOException {
+    public List<Comment> getComments(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, CommentSorting sort) throws IOException {
         String filter = "!-*jbN*LhFh6F";
         String commentsUrl = API_URL + "/comments";
         final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
