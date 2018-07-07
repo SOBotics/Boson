@@ -4,22 +4,19 @@ import fr.tunaki.stackoverflow.chat.ChatHost;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.StackExchangeClient;
 import org.sobotics.boson.framework.services.PropertyService;
-import org.sobotics.boson.sample.QuestionPrinterBot;
+import org.sobotics.boson.sample.TagMonitorBot;
 
 public class Boson{
 
     public static void main(String[] args) {
         PropertyService  propertyService = new PropertyService();
         StackExchangeClient client = new StackExchangeClient(propertyService.getProperty("email"), propertyService.getProperty("password"));
-        Room room = client.joinRoom(ChatHost.STACK_OVERFLOW, 167826);
+        Room room = client.joinRoom(ChatHost.STACK_OVERFLOW, 167908);
 
-//        AnswerPrinterBot interpersonalAnswerBot = new AnswerPrinterBot(room, "interpersonal", 660);
-//        interpersonalAnswerBot.start();
+        room.send("[ [Tagdor](https://chat.stackoverflow.com/transcript/message/43142452#43142452) ] started");
 
-        room.send("[RoundaBot](https://www.youtube.com/watch?v=-Tdu4uKSZ3M) started");
-
-        QuestionPrinterBot gamedev = new QuestionPrinterBot(room, "area51.meta.stackexchange.com", 59);
-        gamedev.start();
+        TagMonitorBot taggy = new TagMonitorBot(room, "stackoverflow", 120);
+        taggy.start();
 
     }
 }
