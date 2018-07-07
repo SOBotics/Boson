@@ -4,10 +4,8 @@ import org.sobotics.boson.framework.exceptions.StackExchangeApiException;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.model.stackexchange.Question;
-import org.sobotics.boson.framework.model.stackexchange.api.AnswerSorting;
-import org.sobotics.boson.framework.model.stackexchange.api.CommentSorting;
-import org.sobotics.boson.framework.model.stackexchange.api.Ordering;
-import org.sobotics.boson.framework.model.stackexchange.api.QuestionSorting;
+import org.sobotics.boson.framework.model.stackexchange.Tag;
+import org.sobotics.boson.framework.model.stackexchange.api.*;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -36,4 +34,12 @@ public abstract class ApiService {
     public abstract List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, QuestionSorting sort, String[] tags) throws IOException, StackExchangeApiException;
 
     public abstract List<Comment> getComments(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, CommentSorting sort) throws IOException;
+
+    public abstract List<Tag> getTags(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException;
+
+    public List<Tag> getTags(String site, int page, int pageSize, Instant fromDate) throws IOException {
+        return getTags(site, page, pageSize, fromDate, Instant.now(), Ordering.DESC, TagSorting.POPULAR, null);
+    }
+
+
 }

@@ -4,10 +4,8 @@ import org.sobotics.boson.framework.exceptions.StackExchangeApiException;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.model.stackexchange.Question;
-import org.sobotics.boson.framework.model.stackexchange.api.AnswerSorting;
-import org.sobotics.boson.framework.model.stackexchange.api.CommentSorting;
-import org.sobotics.boson.framework.model.stackexchange.api.Ordering;
-import org.sobotics.boson.framework.model.stackexchange.api.QuestionSorting;
+import org.sobotics.boson.framework.model.stackexchange.Tag;
+import org.sobotics.boson.framework.model.stackexchange.api.*;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -30,5 +28,8 @@ public class ApiCacheApiService extends ApiService {
         return null;
     }
 
-
+    @Override
+    public List<Tag> getTags(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException {
+        return null;
+    }
 }

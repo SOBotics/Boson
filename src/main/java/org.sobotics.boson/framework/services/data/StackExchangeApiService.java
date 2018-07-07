@@ -8,10 +8,8 @@ import org.sobotics.boson.framework.exceptions.TypeSizeExceededException;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.model.stackexchange.Question;
-import org.sobotics.boson.framework.model.stackexchange.api.AnswerSorting;
-import org.sobotics.boson.framework.model.stackexchange.api.CommentSorting;
-import org.sobotics.boson.framework.model.stackexchange.api.Ordering;
-import org.sobotics.boson.framework.model.stackexchange.api.QuestionSorting;
+import org.sobotics.boson.framework.model.stackexchange.Tag;
+import org.sobotics.boson.framework.model.stackexchange.api.*;
 import org.sobotics.boson.framework.services.PropertyService;
 import org.sobotics.boson.framework.utils.HttpRequestUtils;
 
@@ -73,7 +71,6 @@ public class StackExchangeApiService extends ApiService{
     @Override
     public List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, QuestionSorting sort, String[] tags) throws IOException, StackExchangeApiException {
 
-
         if (tags.length>5){
             throw new TypeSizeExceededException("Only 5 tags are allowed");
         }
@@ -124,6 +121,32 @@ public class StackExchangeApiService extends ApiService{
         System.out.println(json);
         System.out.println(array.get(0).getAsJsonObject());
         return  getObjectFromJson(array, Comment.class);
+    }
+
+
+    @Override
+    public List<Tag> getTags(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException {
+        String filter = "!9Z(-wqiNh";
+        String tagsUrl = API_URL + "/tags";
+        final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
+        final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
+        JsonObject json =  HttpRequestUtils.get(tagsUrl,
+                "order",order.name(),
+                "sort",sort.name(),
+                "filter",filter,
+                "page",Integer.toString(page),
+                "pagesize",Integer.toString(pageSize),
+                "fromdate",fromDateString,
+                "todate",toDateString,
+                "site",site,
+                "inaname", inName,
+                "key",apiKey,
+                "access_token",apiToken);
+        handleBackoff(json);
+        JsonArray array = json.get("items").getAsJsonArray();
+        System.out.println(json);
+        System.out.println(array.get(0).getAsJsonObject());
+        return  getObjectFromJson(array, Tag.class);
     }
 
     private <T> List<T> getObjectFromJson(JsonArray array, Class<T> classOfT) {
