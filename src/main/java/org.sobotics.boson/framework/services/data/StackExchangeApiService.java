@@ -84,8 +84,8 @@ public class StackExchangeApiService extends ApiService{
         final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
         final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
         JsonObject json =  HttpRequestUtils.get(questionsUrl,
-                "order",order.name(),
-                "sort",sort.name(),
+                "order","desc",
+                "sort","activity",
                 "filter",filter,
                 "page",Integer.toString(page),
                 "pagesize",Integer.toString(pageSize),
@@ -95,10 +95,10 @@ public class StackExchangeApiService extends ApiService{
                 "tags",tagString,
                 "key",apiKey,
                 "access_token",apiToken);
+
         handleBackoff(json);
         JsonArray array = json.get("items").getAsJsonArray();
-        System.out.println(json);
-        System.out.println(array.get(0).getAsJsonObject());
+
         return  getObjectFromJson(array, Question.class);
     }
 

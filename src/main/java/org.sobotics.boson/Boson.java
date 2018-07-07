@@ -9,14 +9,16 @@ import org.sobotics.boson.sample.QuestionPrinterBot;
 public class Boson{
 
     public static void main(String[] args) {
-        PropertyService propertyService = new PropertyService();
+        PropertyService  propertyService = new PropertyService();
         StackExchangeClient client = new StackExchangeClient(propertyService.getProperty("email"), propertyService.getProperty("password"));
-        Room room = client.joinRoom(ChatHost.STACK_EXCHANGE, 59667);
+        Room room = client.joinRoom(ChatHost.STACK_OVERFLOW, 167826);
 
 //        AnswerPrinterBot interpersonalAnswerBot = new AnswerPrinterBot(room, "interpersonal", 660);
 //        interpersonalAnswerBot.start();
 
-        QuestionPrinterBot gamedev = new QuestionPrinterBot(room, "gamedev", 100);
+        room.send("[RoundaBot](https://www.youtube.com/watch?v=-Tdu4uKSZ3M) started");
+
+        QuestionPrinterBot gamedev = new QuestionPrinterBot(room, "area51.meta.stackexchange.com", 59);
         gamedev.start();
 
     }
