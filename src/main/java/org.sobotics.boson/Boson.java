@@ -15,7 +15,7 @@ public class Boson{
 
         room.send("[ [Tagdor](https://chat.stackoverflow.com/transcript/message/43142452#43142452) ] started");
 
-        TagMonitorBot taggy = new TagMonitorBot(room, "stackoverflow", 120);
+        TagMonitorBot taggy = new TagMonitorBot(room, "stackoverflow", 6*60*60);
         taggy.start();
 
     }

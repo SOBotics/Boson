@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class QuestionMonitor extends Monitor<Question>{
+public class QuestionMonitor extends Monitor<Question, Question>{
 
     private Instant previousLastActivityDate;
 
@@ -25,7 +25,7 @@ public class QuestionMonitor extends Monitor<Question>{
     @Override
     protected void monitor(ChatRoom room, String site, Filter<Question>[] filters, PrinterService<Question> printer) throws IOException {
         System.out.println("Monitoring the questions on site "+site+" and reporting them in "+room.getRoomId());
-        ApiService apiService = new StackExchangeApiService("kmtAuIIqwIrwkXm1*p3qqA((");
+        ApiService apiService = new StackExchangeApiService("");
         List<Question> questions;
         try {
             questions = apiService.getQuestions(site, 1, 100, null);

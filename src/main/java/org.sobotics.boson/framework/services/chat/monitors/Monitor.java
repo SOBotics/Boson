@@ -9,16 +9,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public abstract class Monitor <T>{
+public abstract class Monitor <T,U>{
 
     private ChatRoom room;
     private int frequency;
     private String site;
     private Filter<T> filters[];
-    private PrinterService<T> printer;
+    private PrinterService<U> printer;
     private ScheduledExecutorService service;
 
-    public Monitor(ChatRoom room, int frequency, String site, Filter<T>[] filters, PrinterService<T> printer) {
+    public Monitor(ChatRoom room, int frequency, String site, Filter<T>[] filters, PrinterService<U> printer) {
         this.room = room;
         this.frequency = frequency;
         this.site = site;
@@ -40,5 +40,5 @@ public abstract class Monitor <T>{
         return service;
     }
 
-    protected abstract void monitor(ChatRoom room, String site, Filter<T> filters[], PrinterService<T> printer) throws IOException;
+    protected abstract void monitor(ChatRoom room, String site, Filter<T> filters[], PrinterService<U> printer) throws IOException;
 }

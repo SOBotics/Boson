@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
-public class AnswerMonitor extends Monitor<Answer>{
+public class AnswerMonitor extends Monitor<Answer, Answer>{
 
     private Instant previousTime;
 
