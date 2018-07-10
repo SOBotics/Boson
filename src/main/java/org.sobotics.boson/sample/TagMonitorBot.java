@@ -6,6 +6,7 @@ import org.sobotics.boson.framework.model.stackexchange.Tag;
 import org.sobotics.boson.framework.services.chat.ChatRoomService;
 import org.sobotics.boson.framework.services.chat.commands.Alive;
 import org.sobotics.boson.framework.services.chat.commands.Command;
+import org.sobotics.boson.framework.services.chat.commands.Help;
 import org.sobotics.boson.framework.services.chat.filters.EmptyFilter;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventListener;
@@ -34,11 +35,13 @@ public class TagMonitorBot {
 
         Map<Command, Object[]> userMentionCommands = new HashMap<>();
         userMentionCommands.put(new Alive(), new Object[0]);
+        userMentionCommands.put(new Help(), new Object[0]);
         chatRoom.setUserMentionedEventConsumer(new UserMentionedListener().getUserMentionedEventConsumer(room, userMentionCommands));
 
 
         Map<Command, Object[]> messageReplyCommands = new HashMap<>();
         messageReplyCommands.put(new Alive(), new Object[0]);
+        messageReplyCommands.put(new Help(), new Object[0]);
         chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(room, messageReplyCommands));
 
         Filter[]  filters = {new EmptyFilter<Tag>()};
