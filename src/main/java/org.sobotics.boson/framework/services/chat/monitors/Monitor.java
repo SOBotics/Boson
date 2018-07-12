@@ -14,15 +14,17 @@ public abstract class Monitor <T,U>{
     private ChatRoom room;
     private int frequency;
     private String site;
+    private String apiKey;
     private Filter<T> filters[];
     private PrinterService<U> printer;
     private ScheduledExecutorService service;
 
-    public Monitor(ChatRoom room, int frequency, String site, Filter<T>[] filters, PrinterService<U> printer) {
+    public Monitor(ChatRoom room, int frequency, String site, String apiKey, Filter<T>[] filters, PrinterService<U> printer) {
         this.room = room;
         this.frequency = frequency;
         this.site = site;
         this.filters = filters;
+        this.apiKey = apiKey;
         this.printer = printer;
         this.service = Executors.newSingleThreadScheduledExecutor();
     }
@@ -30,7 +32,7 @@ public abstract class Monitor <T,U>{
     public ScheduledExecutorService startMonitor(){
         Runnable runnable = () -> {
             try {
-                monitor(room, site, filters, printer);
+                monitor(room, site, apiKey, filters, printer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -40,5 +42,5 @@ public abstract class Monitor <T,U>{
         return service;
     }
 
-    protected abstract void monitor(ChatRoom room, String site, Filter<T> filters[], PrinterService<U> printer) throws IOException;
+    protected abstract void monitor(ChatRoom room, String site, String apiKey, Filter<T> filters[], PrinterService<U> printer) throws IOException;
 }

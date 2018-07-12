@@ -15,15 +15,16 @@ public class AnswerMonitor extends Monitor<Answer, Answer>{
 
     private Instant previousTime;
 
-    public AnswerMonitor(ChatRoom room, int frequency, String site, Filter<Answer>[] filters, PrinterService<Answer> printer) {
-        super(room, frequency, site, filters, printer);
+    public AnswerMonitor(ChatRoom room, int frequency, String site, String apiKey, Filter<Answer>[] filters, PrinterService<Answer> printer) {
+        super(room, frequency, site, apiKey, filters, printer);
         previousTime = Instant.now().minusSeconds(60);
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, Filter<Answer>[] filters, PrinterService<Answer> printer) throws IOException {
-        ApiService apiService = new StackExchangeApiService("");
+    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Answer>[] filters, PrinterService<Answer> printer) throws IOException {
+        ApiService apiService = new StackExchangeApiService(apiKey);
         List<Answer> answers = apiService.getAnswers(site, 1, 100, previousTime);
+        System.out.println(answers);
         for (Answer answer: answers){
             for (Filter<Answer> filter: filters){
                 if(filter.filter(answer)){

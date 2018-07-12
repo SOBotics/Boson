@@ -16,14 +16,14 @@ public class TagMonitor extends Monitor<Tag, List<Tag>>{
 
     private Instant previousTime;
 
-    public TagMonitor(ChatRoom room, int frequency, String site, Filter<Tag>[] filters, PrinterService<List<Tag>> printer) {
-        super(room, frequency, site, filters, printer);
+    public TagMonitor(ChatRoom room, int frequency, String site, String apiKey, Filter<Tag>[] filters, PrinterService<List<Tag>> printer) {
+        super(room, frequency, site, apiKey, filters, printer);
         previousTime = Instant.now().minusSeconds(60*60*6);
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, Filter<Tag>[] filters, PrinterService<List<Tag>> printer) throws IOException {
-        ApiService apiService = new StackExchangeApiService("");
+    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Tag>[] filters, PrinterService<List<Tag>> printer) throws IOException {
+        ApiService apiService = new StackExchangeApiService(apiKey);
         List<Tag> tags = apiService.getTags(site, 1, 100, previousTime);
         List<Tag> filteredTags = new ArrayList<>();
         for (Tag tag: tags){
