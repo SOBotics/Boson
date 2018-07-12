@@ -24,7 +24,6 @@ public class AnswerMonitor extends Monitor<Answer, Answer>{
     protected void monitor(ChatRoom room, String site, String apiKey, Filter<Answer>[] filters, PrinterService<Answer> printer) throws IOException {
         ApiService apiService = new StackExchangeApiService(apiKey);
         List<Answer> answers = apiService.getAnswers(site, 1, 100, previousTime);
-        System.out.println(answers);
         for (Answer answer: answers){
             for (Filter<Answer> filter: filters){
                 if(filter.filter(answer)){
