@@ -1,10 +1,10 @@
 package org.sobotics.boson;
 
-import fr.tunaki.stackoverflow.chat.ChatHost;
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.StackExchangeClient;
 import org.sobotics.boson.framework.services.PropertyService;
 import org.sobotics.boson.sample.TagMonitorBot;
+import org.sobotics.chatexchange.chat.ChatHost;
+import org.sobotics.chatexchange.chat.Room;
+import org.sobotics.chatexchange.chat.StackExchangeClient;
 
 public class Boson{
 

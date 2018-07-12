@@ -1,8 +1,8 @@
 package org.sobotics.boson.framework.services.chat;
 
-import fr.tunaki.stackoverflow.chat.event.EventType;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.services.chat.monitors.Monitor;
+import org.sobotics.chatexchange.chat.event.EventType;
 
 import java.util.ArrayList;
 import java.util.List;

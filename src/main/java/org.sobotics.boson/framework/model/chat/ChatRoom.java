@@ -1,8 +1,8 @@
 package org.sobotics.boson.framework.model.chat;
 
-import fr.tunaki.stackoverflow.chat.ChatHost;
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.*;
+import org.sobotics.chatexchange.chat.ChatHost;
+import org.sobotics.chatexchange.chat.Room;
+import org.sobotics.chatexchange.chat.event.*;
 
 import java.util.function.Consumer;
 

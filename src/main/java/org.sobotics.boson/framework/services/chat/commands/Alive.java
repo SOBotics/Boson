@@ -1,7 +1,7 @@
 package org.sobotics.boson.framework.services.chat.commands;
 
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
+import org.sobotics.chatexchange.chat.Message;
+import org.sobotics.chatexchange.chat.Room;
 
 public class Alive implements Command {
     @Override

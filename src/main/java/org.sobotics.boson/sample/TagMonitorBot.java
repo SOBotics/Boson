@@ -1,6 +1,5 @@
 package org.sobotics.boson.sample;
 
-import fr.tunaki.stackoverflow.chat.Room;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.model.stackexchange.Tag;
 import org.sobotics.boson.framework.services.chat.ChatRoomService;
@@ -14,6 +13,7 @@ import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListene
 import org.sobotics.boson.framework.services.chat.monitors.Monitor;
 import org.sobotics.boson.framework.services.chat.monitors.TagMonitor;
 import org.sobotics.boson.framework.services.chat.printers.ListOfTagsPrinter;
+import org.sobotics.chatexchange.chat.Room;
 
 import java.util.HashMap;
 import java.util.Map;

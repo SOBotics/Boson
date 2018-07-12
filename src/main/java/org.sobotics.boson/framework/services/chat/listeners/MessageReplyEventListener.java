@@ -1,10 +1,10 @@
 package org.sobotics.boson.framework.services.chat.listeners;
 
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.MessageReplyEvent;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import org.sobotics.boson.framework.services.chat.commands.Command;
+import org.sobotics.chatexchange.chat.Message;
+import org.sobotics.chatexchange.chat.Room;
+import org.sobotics.chatexchange.chat.event.MessageReplyEvent;
+import org.sobotics.chatexchange.chat.event.PingMessageEvent;
 
 import java.util.Map;
 import java.util.function.Consumer;
