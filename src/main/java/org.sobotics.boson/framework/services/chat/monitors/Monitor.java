@@ -37,7 +37,6 @@ public abstract class Monitor <T,U>{
                 e.printStackTrace();
             }
         };
-        System.out.println(runnable);
         service.scheduleAtFixedRate(runnable, 0, frequency, TimeUnit.SECONDS);
         return service;
     }

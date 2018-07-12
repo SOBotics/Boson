@@ -119,7 +119,6 @@ public class StackExchangeApiService extends ApiService{
         handleBackoff(json);
         JsonArray array = json.get("items").getAsJsonArray();
         System.out.println(json);
-        System.out.println(array.get(0).getAsJsonObject());
         return  getObjectFromJson(array, Comment.class);
     }
 
@@ -145,7 +144,6 @@ public class StackExchangeApiService extends ApiService{
         handleBackoff(json);
         JsonArray array = json.get("items").getAsJsonArray();
         System.out.println(json);
-        System.out.println(array.get(0).getAsJsonObject());
         return  getObjectFromJson(array, Tag.class);
     }
 

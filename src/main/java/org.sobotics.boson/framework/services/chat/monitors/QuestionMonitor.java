@@ -24,7 +24,6 @@ public class QuestionMonitor extends Monitor<Question, Question>{
 
     @Override
     protected void monitor(ChatRoom room, String site, String apiKey, Filter<Question>[] filters, PrinterService<Question> printer) throws IOException {
-        System.out.println("Monitoring the questions on site "+site+" and reporting them in "+room.getRoomId());
         ApiService apiService = new StackExchangeApiService(apiKey);
         List<Question> questions;
         try {
@@ -32,11 +31,6 @@ public class QuestionMonitor extends Monitor<Question, Question>{
             questions = questions.stream().filter(question -> question.getLastActivityDate().isAfter(previousLastActivityDate)).collect(Collectors.toList());
             if (questions.size()>0) {
                 previousLastActivityDate = questions.get(0).getLastActivityDate();
-            }
-
-            for (Question q: questions){
-                System.out.println("Title: "+q.getTitle() +
-                        "Link: "+q.getLink());
             }
 
         } catch (StackExchangeApiException e) {
