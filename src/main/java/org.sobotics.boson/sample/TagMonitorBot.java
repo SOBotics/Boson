@@ -45,7 +45,7 @@ public class TagMonitorBot {
         chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(room, messageReplyCommands));
 
         Filter[]  filters = {new EmptyFilter<Tag>()};
-        Monitor[] monitors = {new TagMonitor(chatRoom, frequency, site, filters, new ListOfTagsPrinter(site))};
+        Monitor[] monitors = {new TagMonitor(chatRoom, frequency, site, "", filters, new ListOfTagsPrinter(site))};
 
         ChatRoomService service = new ChatRoomService(chatRoom, monitors);
         service.startService();
