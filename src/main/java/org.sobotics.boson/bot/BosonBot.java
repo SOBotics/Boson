@@ -3,6 +3,7 @@ package org.sobotics.boson.bot;
 
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
+import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.model.stackexchange.Question;
 import org.sobotics.boson.framework.model.stackexchange.Tag;
 import org.sobotics.boson.framework.services.chat.ChatRoomService;
@@ -12,10 +13,7 @@ import org.sobotics.boson.framework.services.chat.filters.EmptyFilter;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventListener;
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
-import org.sobotics.boson.framework.services.chat.monitors.AnswerMonitor;
-import org.sobotics.boson.framework.services.chat.monitors.Monitor;
-import org.sobotics.boson.framework.services.chat.monitors.QuestionMonitor;
-import org.sobotics.boson.framework.services.chat.monitors.TagMonitor;
+import org.sobotics.boson.framework.services.chat.monitors.*;
 import org.sobotics.boson.framework.services.chat.printers.GenericContentPrinterService;
 import org.sobotics.boson.framework.services.chat.printers.ListOfTagsPrinter;
 import org.sobotics.chatexchange.chat.ChatHost;
@@ -44,7 +42,9 @@ public class BosonBot {
     public void start(){
         room.send("Boson Started");
         room.addEventListener(EventType.USER_MENTIONED, event-> {
+
             Message message = event.getMessage();
+            System.out.println(message.getPlainContent());
             String arguments[] = message.getPlainContent().split(" ");
             if (arguments[1].equals("track")) {
                 ChatRoomService service = trackCommand(room, message);
@@ -59,6 +59,7 @@ public class BosonBot {
                     });
                     newbot.start();
 
+
                     char[] characs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
                     Random secureRandom = new SecureRandom();
                     String ID = "";
@@ -66,6 +67,7 @@ public class BosonBot {
                         ID += characs[secureRandom.nextInt(characs.length)];
 
                     bots.put(ID, newbot);
+                    room.send("New tracker started: "+ ID);
                 }
             }
             if (arguments[1].equals("help")){
@@ -77,21 +79,26 @@ public class BosonBot {
             if (arguments[1].equals("stop")){
                 String stopBotId = arguments[2];
                 if(bots.containsKey(stopBotId)) {
-                    bots.get(stopBotId).interrupt();
+                    // TODO: Remove Deprecated stop and use a Schedular.
+                    bots.get(stopBotId).stop();
                     bots.remove(stopBotId);
-                    room.send("Bot stopped");
+                    room.send("Bot "+stopBotId+" stopped");
                 }
                 else {
                     room.send("Wrong bot ID");
                 }
+            }
+            if (arguments[1].equals("list")){
+                room.send(String.join(";", bots.keySet()));
             }
         });
     }
 
     private ChatRoomService trackCommand(Room room, Message message){
 
+
         String arguments[] = message.getPlainContent().split(" ");
-        if(arguments.length==5 || arguments.length==7){
+        if (arguments.length == 5 || arguments.length == 7) {
             String site = arguments[2];
             String posttype = arguments[3];
             int frequency = Integer.parseInt(arguments[4]);
@@ -99,12 +106,16 @@ public class BosonBot {
             int otherRoomId = room.getRoomId();
             ChatHost otherRoomHost = room.getHost();
             ChatRoom chatRoom = new ChatRoom(room.getRoomId(), room.getHost(), room);
-            if(arguments.length==7){
-                sameRoom= false;
+            if (arguments.length == 7) {
+                sameRoom = false;
                 otherRoomId = Integer.parseInt(arguments[5]);
-                switch (arguments[6]){
-                    case "stackoverflow": otherRoomHost=ChatHost.STACK_OVERFLOW; break;
-                    case "stackexchange": otherRoomHost=ChatHost.STACK_EXCHANGE; break;
+                switch (arguments[6]) {
+                    case "stackoverflow":
+                        otherRoomHost = ChatHost.STACK_OVERFLOW;
+                        break;
+                    case "stackexchange":
+                        otherRoomHost = ChatHost.STACK_EXCHANGE;
+                        break;
                 }
 
                 Room otherRoom = client.joinRoom(otherRoomHost, otherRoomId);
@@ -121,33 +132,37 @@ public class BosonBot {
 
             Filter[] filters;
             Monitor[] monitors;
+            String apiKey = "";
 
-            switch (posttype){
+            switch (posttype) {
                 case "question":
+                case "questions":
                     filters = new Filter[]{new EmptyFilter<Question>()};
-                    monitors = new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, filters,
+                    monitors = new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, filters,
                             new GenericContentPrinterService<>(site))};
                     break;
                 case "answer":
+                case "answers":
                     filters = new Filter[]{new EmptyFilter<Answer>()};
-                    monitors = new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, filters,
+                    monitors = new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, filters,
                             new GenericContentPrinterService<>(site))};
                     break;
-//                case "comment":
-//                    filters = new Filter[]{new EmptyFilter<Comment>()};
-//                    monitors = new Monitor[]{new CommentMonitor(chatRoom, frequency, site, filters,
-//                            new GenericContentPrinterService<>(site))};
-//                    break;
+                case "comment":
+                case "comments":
+                    filters = new Filter[]{new EmptyFilter<Comment>()};
+                    monitors = new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters,
+                            new GenericContentPrinterService<>(site))};
+                    break;
                 case "tag":
+                case "tags":
                     filters = new Filter[]{new EmptyFilter<Tag>()};
-                    monitors = new Monitor[]{new TagMonitor(chatRoom, frequency, site, filters,
+                    monitors = new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, filters,
                             new ListOfTagsPrinter(site))};
                     break;
                 default:
+                    room.send("The only types supported are questions, answers and tags");
                     return null;
-
             }
-
             ChatRoomService service = new ChatRoomService(chatRoom, monitors);
             return service;
 
