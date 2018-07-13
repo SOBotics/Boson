@@ -41,5 +41,10 @@ public abstract class Monitor <T,U>{
         return service;
     }
 
+    public void stopMonitor(){
+        service.shutdown();
+        room.getRoom().leave();
+    }
+
     protected abstract void monitor(ChatRoom room, String site, String apiKey, Filter<T> filters[], PrinterService<U> printer) throws IOException;
 }
