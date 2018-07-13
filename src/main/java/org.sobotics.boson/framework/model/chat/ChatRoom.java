@@ -35,9 +35,9 @@ public class ChatRoom {
         this.kickedEventConsumer = kickedEventConsumer;
     }
 
-    public ChatRoom(int roomId, ChatHost chatHost, Room room) {
-        this.roomId = roomId;
-        this.chatHost = chatHost;
+    public ChatRoom(Room room) {
+        this.roomId = room.getRoomId();
+        this.chatHost = room.getHost();
         this.room = room;
         this.userMentionedEventConsumer = null;
         this.messageReplyEventConsumer = null;

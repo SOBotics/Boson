@@ -30,7 +30,7 @@ public class AnswerPrinterBot {
     }
 
     public void start(){
-        ChatRoom chatRoom = new ChatRoom(room.getRoomId(), room.getHost(), room);
+        ChatRoom chatRoom = new ChatRoom(room);
 
         Map<Command, Object[]> userMentionCommands = new HashMap<>();
         userMentionCommands.put(new Alive(), new Object[0]);

@@ -21,7 +21,7 @@ public class QuestionPrinterBot {
     }
 
     public void start(){
-        ChatRoom chatRoom = new ChatRoom(room.getRoomId(), room.getHost(), room);
+        ChatRoom chatRoom = new ChatRoom(room);
 
         Filter[]  filters = {};//{new HasCloseVoteFilter(3)};
         Monitor[] monitors = {new QuestionMonitor(chatRoom, frequency, site, "", filters, new CloseVoteQuestionPrinter(site))};
