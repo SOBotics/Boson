@@ -45,6 +45,7 @@ public class AnswerPrinterBot {
         Monitor[] monitors = {new AnswerMonitor(chatRoom, frequency, site, "", filters, new GenericContentPrinterService<Answer>(site))};
 
         ChatRoomService service = new ChatRoomService(chatRoom, monitors);
+        service.initializeService();
         service.startService();
 
     }

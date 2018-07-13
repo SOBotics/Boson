@@ -48,6 +48,7 @@ public class TagMonitorBot {
         Monitor[] monitors = {new TagMonitor(chatRoom, frequency, site, "", filters, new ListOfTagsPrinter(site))};
 
         ChatRoomService service = new ChatRoomService(chatRoom, monitors);
+        service.initializeService();
         service.startService();
 
     }

@@ -19,7 +19,7 @@ public class ChatRoomService {
         this.services = new ArrayList<>();
     }
 
-    public void startService(){
+    public void initializeService() {
         if (chatRoom.getUserMentionedEventConsumer()!=null)
             chatRoom.getRoom().addEventListener(EventType.USER_MENTIONED, chatRoom.getUserMentionedEventConsumer());
 
@@ -46,7 +46,9 @@ public class ChatRoomService {
 
         if (chatRoom.getKickedEventConsumer()!=null)
             chatRoom.getRoom().addEventListener(EventType.KICKED, chatRoom.getKickedEventConsumer());
+    }
 
+    public void startService(){
         for(Monitor monitor: monitors){
             services.add(monitor.startMonitor());
         }
@@ -63,11 +65,10 @@ public class ChatRoomService {
     }
 
     public void addMonitor(Monitor monitor){
-        stopService();
         Monitor[] tempMonitor = new Monitor[monitors.length+1];
         System.arraycopy(monitors, 0, tempMonitor, 0, monitors.length);
         tempMonitor[monitors.length] = monitor;
         monitors = tempMonitor;
-        startService();
+        services.add(monitor.startMonitor());
     }
 }

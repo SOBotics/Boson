@@ -27,6 +27,7 @@ public class QuestionPrinterBot {
         Monitor[] monitors = {new QuestionMonitor(chatRoom, frequency, site, "", filters, new CloseVoteQuestionPrinter(site))};
 
         ChatRoomService service = new ChatRoomService(chatRoom, monitors);
+        service.initializeService();
         service.startService();
 
     }
