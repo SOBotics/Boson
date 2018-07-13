@@ -11,10 +11,12 @@ import java.util.concurrent.ScheduledExecutorService;
 public class ChatRoomService {
     private ChatRoom chatRoom;
     private Monitor[] monitors;
+    private List<ScheduledExecutorService> services;
 
     public ChatRoomService(ChatRoom chatRoom, Monitor[] monitors) {
         this.chatRoom = chatRoom;
         this.monitors = monitors;
+        this.services = new ArrayList<>();
     }
 
     public void startService(){
@@ -45,9 +47,27 @@ public class ChatRoomService {
         if (chatRoom.getKickedEventConsumer()!=null)
             chatRoom.getRoom().addEventListener(EventType.KICKED, chatRoom.getKickedEventConsumer());
 
-        List<ScheduledExecutorService> services = new ArrayList<>();
         for(Monitor monitor: monitors){
             services.add(monitor.startMonitor());
         }
+    }
+
+    public void stopService(){
+        for(Monitor monitor: monitors){
+            monitor.stopMonitor();
+        }
+        for (ScheduledExecutorService service: services){
+            service.shutdown();
+        }
+        chatRoom.getRoom().leave();
+    }
+
+    private void addMonitor(Monitor monitor){
+        stopService();
+        Monitor[] tempMonitor = new Monitor[monitors.length+1];
+        System.arraycopy(monitors, 0, tempMonitor, 0, monitors.length);
+        tempMonitor[monitors.length] = monitor;
+        monitors = tempMonitor;
+        startService();
     }
 }
