@@ -31,7 +31,7 @@ public class BosonBot {
 
     private Room room;
     private StackExchangeClient client;
-    private Map<String, Thread> bots;
+    private Map<String, Bot> bots;
 
     public BosonBot(Room room, StackExchangeClient client) {
         this.room = room;
@@ -42,130 +42,152 @@ public class BosonBot {
     public void start(){
         room.send("Boson Started");
         room.addEventListener(EventType.USER_MENTIONED, event-> {
-
             Message message = event.getMessage();
             System.out.println(message.getPlainContent());
             String arguments[] = message.getPlainContent().split(" ");
-            if (arguments[1].equals("track")) {
-                ChatRoomService service = trackCommand(room, message);
-                if (service != null) {
-
-                    Thread newbot = new Thread(() -> {
-                        try {
-                            service.startService();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    newbot.start();
-
-
-                    char[] characs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
-                    Random secureRandom = new SecureRandom();
-                    String ID = "";
-                    for (int i = 0; i < 10; i++)
-                        ID += characs[secureRandom.nextInt(characs.length)];
-
-                    bots.put(ID, newbot);
-                    room.send("New tracker started: "+ ID);
-                }
-            }
-            if (arguments[1].equals("help")){
-                room.send("Use the command `track sitename posttype frequency [roomID chatServer]` to start tracking sites");
-            }
-            if (arguments[1].equals("alive")){
-                room.send("Yes, I'm alive");
-            }
-            if (arguments[1].equals("stop")){
-                String stopBotId = arguments[2];
-                if(bots.containsKey(stopBotId)) {
-                    // TODO: Remove Deprecated stop and use a Schedular.
-                    bots.get(stopBotId).stop();
-                    bots.remove(stopBotId);
-                    room.send("Bot "+stopBotId+" stopped");
-                }
-                else {
-                    room.send("Wrong bot ID");
-                }
-            }
-            if (arguments[1].equals("list")){
-                room.send(String.join(";", bots.keySet()));
+            switch (arguments[1]) {
+                case "track":
+                    trackCommand(message);
+                    break;
+                case "help":
+                    room.send("Use the command `track sitename posttype frequency [roomID chatServer]` to start tracking sites");
+                    break;
+                case "alive":
+                    room.send("Yes, I'm alive");
+                    break;
+                case "stop":
+                    stopCommand(arguments[2]);
+                    break;
+                case "list":
+                    room.send(String.join(";", bots.keySet()));
+                    break;
             }
         });
     }
 
-    private ChatRoomService trackCommand(Room room, Message message){
+    private void stopCommand(String argument) {
+        if(bots.containsKey(argument)) {
+            bots.get(argument).getChatRoomService().stopService();
+            bots.remove(argument);
+            room.send("Bot "+ argument +" stopped");
+        }
+        else {
+            room.send("Wrong bot ID");
+        }
+    }
 
-
-        String arguments[] = message.getPlainContent().split(" ");
-        if (arguments.length == 5 || arguments.length == 7) {
-            String site = arguments[2];
-            String posttype = arguments[3];
-            int frequency = Integer.parseInt(arguments[4]);
-            boolean sameRoom = true;
-            int otherRoomId = room.getRoomId();
-            ChatHost otherRoomHost = room.getHost();
-            ChatRoom chatRoom = new ChatRoom(room.getRoomId(), room.getHost(), room);
-            if (arguments.length == 7) {
-                sameRoom = false;
-                otherRoomId = Integer.parseInt(arguments[5]);
-                switch (arguments[6]) {
-                    case "stackoverflow":
-                        otherRoomHost = ChatHost.STACK_OVERFLOW;
-                        break;
-                    case "stackexchange":
-                        otherRoomHost = ChatHost.STACK_EXCHANGE;
-                        break;
+    private void trackCommand(Message message) {
+        String arguments1[] = message.getPlainContent().split(" ");
+        if (arguments1.length == 5 || arguments1.length == 7) {
+            String site = arguments1[2];
+            String posttype = arguments1[3];
+            int frequency = Integer.parseInt(arguments1[4]);
+            ChatRoom chatRoom = getChatRoom(room, arguments1);
+            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom);
+            if(monitors==null) {
+                room.send("The only types supported are questions, answers and tags");
+            }
+            else {
+                ChatRoomService service;
+                String similarRoom = findChatRoomByRoomId(chatRoom.getRoomId());
+                if(similarRoom!=null){
+                    room.send("Bot "+similarRoom+" runs in the same room. Adding the monitor to that");
+                    service = bots.get(similarRoom).getChatRoomService();
+                    for(Monitor monitor: monitors)
+                        service.addMonitor(monitor);
                 }
+                else {
+                    service = new ChatRoomService(chatRoom, monitors);
+                    service.startService();
+                }
+                String ID = getUniqueId();
+                bots.put(ID, new Bot(ID, chatRoom, service, message.getId()));
+                room.send("New tracker started: [" + ID + "](" + bots.get(ID).getCreationMessageUrl() + ")");
+            }
+        }
+        else {
+            room.send("Wrong arguments sent.");
+        }
+    }
 
-                Room otherRoom = client.joinRoom(otherRoomHost, otherRoomId);
-                chatRoom = new ChatRoom(room.getRoomId(), room.getHost(), room);
-                Map<Command, Object[]> userMentionCommands = new HashMap<>();
-                userMentionCommands.put(new Alive(), new Object[0]);
-                chatRoom.setUserMentionedEventConsumer(new UserMentionedListener().getUserMentionedEventConsumer(room, userMentionCommands));
+    private String getUniqueId() {
+        char[] characs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
+        Random secureRandom = new SecureRandom();
+        String ID = "";
+        for (int i = 0; i < 10; i++)
+            ID += characs[secureRandom.nextInt(characs.length)];
+        return ID;
+    }
 
-                Map<Command, Object[]> messageReplyCommands = new HashMap<>();
-                messageReplyCommands.put(new Alive(), new Object[0]);
-                chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(room, messageReplyCommands));
+    private Monitor[] getMonitors(String site, String posttype, int frequency, ChatRoom chatRoom) {
+        Filter[] filters = null;
+        Monitor[] monitors = null;
+        String apiKey = "HYWHTHpYImfSRnhkArqu8Q((";
 
+        switch (posttype) {
+            case "question":
+            case "questions":
+                filters = new Filter[]{new EmptyFilter<Question>()};
+                monitors = new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, filters,
+                        new GenericContentPrinterService<>(site))};
+                break;
+            case "answer":
+            case "answers":
+                filters = new Filter[]{new EmptyFilter<Answer>()};
+                monitors = new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, filters,
+                        new GenericContentPrinterService<>(site))};
+                break;
+            case "comment":
+            case "comments":
+                filters = new Filter[]{new EmptyFilter<Comment>()};
+                monitors = new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters,
+                        new GenericContentPrinterService<>(site))};
+                break;
+            case "tag":
+            case "tags":
+                filters = new Filter[]{new EmptyFilter<Tag>()};
+                monitors = new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, filters,
+                        new ListOfTagsPrinter(site))};
+                break;
+        }
+        return monitors;
+    }
+
+    private ChatRoom getChatRoom(Room room, String[] arguments) {
+        int otherRoomId;
+        ChatHost otherRoomHost = room.getHost();
+        ChatRoom chatRoom = new ChatRoom(room);
+        if (arguments.length == 7) {
+            otherRoomId = Integer.parseInt(arguments[5]);
+            switch (arguments[6]) {
+                case "stackoverflow":
+                    otherRoomHost = ChatHost.STACK_OVERFLOW;
+                    break;
+                case "stackexchange":
+                    otherRoomHost = ChatHost.STACK_EXCHANGE;
+                    break;
             }
 
-            Filter[] filters;
-            Monitor[] monitors;
-            String apiKey = "";
+            Room otherRoom = client.joinRoom(otherRoomHost, otherRoomId);
+            chatRoom = new ChatRoom(otherRoom);
+            Map<Command, Object[]> userMentionCommands = new HashMap<>();
+            userMentionCommands.put(new Alive(), new Object[0]);
+            chatRoom.setUserMentionedEventConsumer(new UserMentionedListener().getUserMentionedEventConsumer(room, userMentionCommands));
 
-            switch (posttype) {
-                case "question":
-                case "questions":
-                    filters = new Filter[]{new EmptyFilter<Question>()};
-                    monitors = new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, filters,
-                            new GenericContentPrinterService<>(site))};
-                    break;
-                case "answer":
-                case "answers":
-                    filters = new Filter[]{new EmptyFilter<Answer>()};
-                    monitors = new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, filters,
-                            new GenericContentPrinterService<>(site))};
-                    break;
-                case "comment":
-                case "comments":
-                    filters = new Filter[]{new EmptyFilter<Comment>()};
-                    monitors = new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters,
-                            new GenericContentPrinterService<>(site))};
-                    break;
-                case "tag":
-                case "tags":
-                    filters = new Filter[]{new EmptyFilter<Tag>()};
-                    monitors = new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, filters,
-                            new ListOfTagsPrinter(site))};
-                    break;
-                default:
-                    room.send("The only types supported are questions, answers and tags");
-                    return null;
+            Map<Command, Object[]> messageReplyCommands = new HashMap<>();
+            messageReplyCommands.put(new Alive(), new Object[0]);
+            chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(room, messageReplyCommands));
+
+        }
+        return chatRoom;
+    }
+
+    private String findChatRoomByRoomId(int roomId){
+        for (String key: bots.keySet()){
+            Bot bot = bots.get(key);
+            if(bot.getChatRoom().getRoomId()==roomId){
+                return key;
             }
-            ChatRoomService service = new ChatRoomService(chatRoom, monitors);
-            return service;
-
         }
         return null;
     }

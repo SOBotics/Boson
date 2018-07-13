@@ -62,7 +62,7 @@ public class ChatRoomService {
         chatRoom.getRoom().leave();
     }
 
-    private void addMonitor(Monitor monitor){
+    public void addMonitor(Monitor monitor){
         stopService();
         Monitor[] tempMonitor = new Monitor[monitors.length+1];
         System.arraycopy(monitors, 0, tempMonitor, 0, monitors.length);
