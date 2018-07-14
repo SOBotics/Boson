@@ -1,10 +1,7 @@
 package org.sobotics.boson.framework.services.data;
 
 import org.sobotics.boson.framework.exceptions.StackExchangeApiException;
-import org.sobotics.boson.framework.model.stackexchange.Answer;
-import org.sobotics.boson.framework.model.stackexchange.Comment;
-import org.sobotics.boson.framework.model.stackexchange.Question;
-import org.sobotics.boson.framework.model.stackexchange.Tag;
+import org.sobotics.boson.framework.model.stackexchange.*;
 import org.sobotics.boson.framework.model.stackexchange.api.*;
 
 import java.io.IOException;
@@ -30,6 +27,16 @@ public class ApiCacheApiService extends ApiService {
 
     @Override
     public List<Tag> getTags(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException {
+        return null;
+    }
+
+    @Override
+    public List<Post> getPosts(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, PostSorting sort, String inName) throws IOException {
+        return null;
+    }
+
+    @Override
+    public List<Post> getAllPosts(String site, Instant fromDate, Instant toDate, Ordering order, PostSorting sort, String inName) throws IOException {
         return null;
     }
 }

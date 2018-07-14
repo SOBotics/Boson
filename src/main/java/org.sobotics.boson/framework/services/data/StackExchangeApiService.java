@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sobotics.boson.framework.exceptions.StackExchangeApiException;
 import org.sobotics.boson.framework.exceptions.TypeSizeExceededException;
-import org.sobotics.boson.framework.model.stackexchange.Answer;
-import org.sobotics.boson.framework.model.stackexchange.Comment;
-import org.sobotics.boson.framework.model.stackexchange.Question;
-import org.sobotics.boson.framework.model.stackexchange.Tag;
+import org.sobotics.boson.framework.model.stackexchange.*;
 import org.sobotics.boson.framework.model.stackexchange.api.*;
 import org.sobotics.boson.framework.services.PropertyService;
 import org.sobotics.boson.framework.utils.HttpRequestUtils;
@@ -145,6 +142,50 @@ public class StackExchangeApiService extends ApiService{
         JsonArray array = json.get("items").getAsJsonArray();
         System.out.println(json);
         return  getObjectFromJson(array, Tag.class);
+    }
+
+    @Override
+    public List<Post> getPosts(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, PostSorting sort, String inName) throws IOException {
+        String filter = "!b1MMEHhUmZPas(";
+        String postsUrl = API_URL + "/posts";
+        final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
+        final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
+        JsonObject json = getPostsJson(site, page, pageSize, order, sort, filter, postsUrl, fromDateString, toDateString);
+        JsonArray array = json.get("items").getAsJsonArray();
+        return  getObjectFromJson(array, Post.class);
+    }
+
+    @Override
+    public List<Post> getAllPosts(String site, Instant fromDate, Instant toDate, Ordering order, PostSorting sort, String inName) throws IOException {
+        String filter = "!b1MMEHhUmZPas(";
+        String postsUrl = API_URL + "/posts";
+        final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
+        final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
+        JsonArray array = new JsonArray();
+        JsonObject json;
+        int page = 1;
+        do {
+            json = getPostsJson(site, page, 100, order, sort, filter, postsUrl, fromDateString, toDateString);
+            array.addAll(json.get("items").getAsJsonArray());
+            page+=1;
+        } while (json.has("has_more") && json.get("has_more").getAsBoolean());
+        return  getObjectFromJson(array, Post.class);
+    }
+
+    private JsonObject getPostsJson(String site, int page, int pageSize, Ordering order, PostSorting sort, String filter, String postsUrl, String fromDateString, String toDateString) throws IOException {
+        JsonObject json =  HttpRequestUtils.get(postsUrl,
+                "order",order.name(),
+                "sort",sort.name(),
+                "filter",filter,
+                "page",Integer.toString(page),
+                "pagesize",Integer.toString(pageSize),
+                "fromdate", fromDateString,
+                "todate", toDateString,
+                "site",site,
+                "key",apiKey,
+                "access_token",apiToken);
+        handleBackoff(json);
+        return json;
     }
 
     private <T> List<T> getObjectFromJson(JsonArray array, Class<T> classOfT) {
