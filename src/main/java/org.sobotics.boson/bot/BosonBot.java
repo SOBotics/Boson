@@ -73,7 +73,8 @@ public class BosonBot {
     private void stopCommand(String argument) {
         if(bots.containsKey(argument)) {
             bots.get(argument).getChatRoomService().stopService();
-            if (findChatRoomByRoomId(bots.get(argument).getChatRoom().getRoomId())==null){
+            if (findChatRoomByRoomId(bots.get(argument).getChatRoom().getRoomId())==null &&
+                    bots.get(argument).getChatRoom().getRoomId()!=room.getRoomId()){
                 bots.get(argument).getChatRoomService().terminateService();
             }
             bots.remove(argument);
@@ -99,14 +100,17 @@ public class BosonBot {
                 ChatRoomService service;
                 String ID = getUniqueId();
                 service = new ChatRoomService(chatRoom, monitors);
-                String similarRoom = findChatRoomByRoomId(chatRoom.getRoomId());
-                if(similarRoom==null && chatRoom.getRoomId()!=room.getRoomId()){
-                    service.initializeService();
+                String similarRoom;
+                if (chatRoom != null) {
+                    similarRoom = findChatRoomByRoomId(chatRoom.getRoomId());
+                    if (similarRoom == null && chatRoom.getRoomId() != room.getRoomId()) {
+                        service.initializeService();
+                    }
+                    service.startService();
+                    bots.put(ID, new Bot(ID, chatRoom, service,
+                            room.getHost().getBaseUrl() + "/messages/" + message.getId() + "/history"));
+                    room.send("New tracker started: [" + ID + "](" + bots.get(ID).getCreationMessageUrl() + ")");
                 }
-                service.startService();
-                bots.put(ID, new Bot(ID, chatRoom, service,
-                        room.getHost().getBaseUrl()+"/messages/"+message.getId()+"/history"));
-                room.send("New tracker started: [" + ID + "](" + bots.get(ID).getCreationMessageUrl() + ")");
             }
         }
         else {
@@ -124,7 +128,7 @@ public class BosonBot {
     }
 
     private Monitor[] getMonitors(String site, String posttype, int frequency, ChatRoom chatRoom) {
-        Filter[] filters = null;
+        Filter[] filters;
         Monitor[] monitors = null;
         String apiKey = "HYWHTHpYImfSRnhkArqu8Q((";
 
@@ -191,8 +195,10 @@ public class BosonBot {
 
     private String findChatRoomByRoomId(int roomId){
         for (String key: bots.keySet()){
+            System.out.println("Searching "+key+" for roomID "+roomId);
             Bot bot = bots.get(key);
             if(bot.getChatRoom().getRoomId()==roomId){
+                System.out.println("Found "+key + "for roomID "+roomId);
                 return key;
             }
         }
