@@ -117,10 +117,10 @@ public class BosonBot {
     private String getUniqueId() {
         char[] characs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
         Random secureRandom = new SecureRandom();
-        String ID = "";
+        StringBuilder ID = new StringBuilder();
         for (int i = 0; i < 10; i++)
-            ID += characs[secureRandom.nextInt(characs.length)];
-        return ID;
+            ID.append(characs[secureRandom.nextInt(characs.length)]);
+        return ID.toString();
     }
 
     private Monitor[] getMonitors(String site, String posttype, int frequency, ChatRoom chatRoom) {
@@ -176,11 +176,11 @@ public class BosonBot {
             chatRoom = new ChatRoom(otherRoom);
             Map<Command, Object[]> userMentionCommands = new HashMap<>();
             userMentionCommands.put(new Alive(), new Object[0]);
-            chatRoom.setUserMentionedEventConsumer(new UserMentionedListener().getUserMentionedEventConsumer(room, userMentionCommands));
+            chatRoom.setUserMentionedEventConsumer(new UserMentionedListener().getUserMentionedEventConsumer(otherRoom, userMentionCommands));
 
             Map<Command, Object[]> messageReplyCommands = new HashMap<>();
             messageReplyCommands.put(new Alive(), new Object[0]);
-            chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(room, messageReplyCommands));
+            chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(otherRoom, messageReplyCommands));
 
         }
         return chatRoom;
