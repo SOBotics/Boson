@@ -31,12 +31,12 @@ public class ApiCacheApiService extends ApiService {
     }
 
     @Override
-    public List<Post> getPosts(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, PostSorting sort, String inName) throws IOException {
+    public List<Post> getPosts(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, PostSorting sort) throws IOException {
         return null;
     }
 
     @Override
-    public List<Post> getAllPosts(String site, Instant fromDate, Instant toDate, Ordering order, PostSorting sort, String inName) throws IOException {
+    public List<Post> getPosts(String site, Instant fromDate, Instant toDate, Ordering order, PostSorting sort) throws IOException {
         return null;
     }
 }

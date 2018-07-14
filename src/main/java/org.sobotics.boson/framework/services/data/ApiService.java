@@ -18,6 +18,22 @@ public abstract class ApiService {
         return getAnswers(site, page, pageSize, fromDate, Instant.now(), Ordering.DESC, AnswerSorting.ACTIVITY);
     }
 
+    public List<Post> getPosts(String site) throws IOException {
+        return getPosts(site, 1, 30, null, null, Ordering.DESC, PostSorting.ACTIVITY);
+    }
+
+    public List<Post> getPosts(String site, Instant fromDate) throws IOException {
+        return getPosts(site, fromDate, Instant.now(), Ordering.DESC, PostSorting.ACTIVITY);
+    }
+
+    public List<Post> getPostsByCreation(String site, Instant fromDate) throws IOException {
+        return getPosts(site, fromDate, Instant.now(), Ordering.ASC, PostSorting.CREATION);
+    }
+
+    public List<Post> getPosts(String site, int page, int pageSize, Instant fromDate) throws IOException {
+        return getPosts(site, page, pageSize, fromDate, Instant.now(), Ordering.DESC, PostSorting.ACTIVITY);
+    }
+
     public List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate) throws IOException, StackExchangeApiException {
         return getQuestions(site, page, pageSize, fromDate, null, Ordering.DESC, QuestionSorting.ACTIVITY, new String[0]);
     }
@@ -38,9 +54,9 @@ public abstract class ApiService {
 
     public abstract List<Tag> getTags(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException;
 
-    public abstract List<Post> getPosts(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, PostSorting sort, String inName) throws IOException;
+    public abstract List<Post> getPosts(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, PostSorting sort) throws IOException;
 
-    public abstract List<Post> getAllPosts(String site, Instant fromDate, Instant toDate, Ordering order, PostSorting sort, String inName) throws IOException;
+    public abstract List<Post> getPosts(String site, Instant fromDate, Instant toDate, Ordering order, PostSorting sort) throws IOException;
 
 
     public List<Tag> getTags(String site, int page, int pageSize, Instant fromDate) throws IOException {
