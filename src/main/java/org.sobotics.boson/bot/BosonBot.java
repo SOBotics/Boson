@@ -104,7 +104,8 @@ public class BosonBot {
                     service.initializeService();
                 }
                 service.startService();
-                bots.put(ID, new Bot(ID, chatRoom, service, message.getId()));
+                bots.put(ID, new Bot(ID, chatRoom, service,
+                        room.getHost().getBaseUrl()+"/messages/"+message.getId()+"/history"));
                 room.send("New tracker started: [" + ID + "](" + bots.get(ID).getCreationMessageUrl() + ")");
             }
         }
