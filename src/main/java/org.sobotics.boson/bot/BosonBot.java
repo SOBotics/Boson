@@ -159,7 +159,7 @@ public class BosonBot {
 
     private ChatRoom getChatRoom(Room room, String[] arguments) {
         int otherRoomId;
-        ChatHost otherRoomHost = room.getHost();
+        ChatHost otherRoomHost;
         ChatRoom chatRoom = new ChatRoom(room);
         if (arguments.length == 7) {
             otherRoomId = Integer.parseInt(arguments[5]);
@@ -170,6 +170,9 @@ public class BosonBot {
                 case "stackexchange":
                     otherRoomHost = ChatHost.STACK_EXCHANGE;
                     break;
+                default:
+                    room.send("Chat host can either be `sstackoverflow` or `stackexchange`");
+                    return null;
             }
 
             Room otherRoom = client.joinRoom(otherRoomHost, otherRoomId);
