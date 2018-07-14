@@ -58,12 +58,12 @@ public class ChatRoomService {
         for(Monitor monitor: monitors){
             monitor.stopMonitor();
         }
-    }
-
-    public void terminateService() {
         for (ScheduledExecutorService service: services){
             service.shutdown();
         }
+    }
+
+    public void terminateService() {
         chatRoom.getRoom().leave();
     }
 
