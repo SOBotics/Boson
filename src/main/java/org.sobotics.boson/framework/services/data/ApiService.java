@@ -24,6 +24,9 @@ public abstract class ApiService {
     public List<Question> getQuestions(String site, int page, int pageSize, Instant fromDate) throws IOException, StackExchangeApiException {
         return getQuestions(site, page, pageSize, fromDate, null, Ordering.DESC, QuestionSorting.ACTIVITY, new String[0]);
     }
+    public List<Question> getQuestionsByCreation(String site, int page, int pageSize, Instant fromDate) throws IOException, StackExchangeApiException {
+        return getQuestions(site, page, pageSize, fromDate, null, Ordering.ASC, QuestionSorting.CREATION, new String[0]);
+    }
 
     public List<Comment> getComments(String site, int page, int pageSize, Instant fromDate) throws IOException {
         return getComments(site, page, pageSize, fromDate, Instant.now(), Ordering.DESC, CommentSorting.CREATION);
