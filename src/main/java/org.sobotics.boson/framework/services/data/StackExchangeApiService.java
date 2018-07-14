@@ -61,7 +61,7 @@ public class StackExchangeApiService extends ApiService{
                 "access_token",apiToken);
         handleBackoff(json);
         JsonArray array = json.get("items").getAsJsonArray();
-        System.out.println(json);
+        System.out.println(site+" : "+json);
         return  getObjectFromJson(array, Answer.class);
     }
 
@@ -92,7 +92,7 @@ public class StackExchangeApiService extends ApiService{
 
         handleBackoff(json);
         JsonArray array = json.get("items").getAsJsonArray();
-
+        System.out.println(site+" : "+json);
         return  getObjectFromJson(array, Question.class);
     }
 
@@ -115,7 +115,7 @@ public class StackExchangeApiService extends ApiService{
                 "access_token",apiToken);
         handleBackoff(json);
         JsonArray array = json.get("items").getAsJsonArray();
-        System.out.println(json);
+        System.out.println(site+" : "+json);
         return  getObjectFromJson(array, Comment.class);
     }
 
@@ -140,7 +140,7 @@ public class StackExchangeApiService extends ApiService{
                 "access_token",apiToken);
         handleBackoff(json);
         JsonArray array = json.get("items").getAsJsonArray();
-        System.out.println(json);
+        System.out.println(site+" : "+json);
         return  getObjectFromJson(array, Tag.class);
     }
 
@@ -185,6 +185,7 @@ public class StackExchangeApiService extends ApiService{
                 "key",apiKey,
                 "access_token",apiToken);
         handleBackoff(json);
+        System.out.println(site+" : "+json);
         return json;
     }
 
