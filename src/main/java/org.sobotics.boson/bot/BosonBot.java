@@ -73,11 +73,11 @@ public class BosonBot {
     private void stopCommand(String argument) {
         if(bots.containsKey(argument)) {
             bots.get(argument).getChatRoomService().stopService();
+            bots.remove(argument);
             if (findChatRoomByRoomId(bots.get(argument).getChatRoom().getRoomId())==null &&
                     bots.get(argument).getChatRoom().getRoomId()!=room.getRoomId()){
                 bots.get(argument).getChatRoomService().terminateService();
             }
-            bots.remove(argument);
             room.send("Bot "+ argument +" stopped");
         }
         else {
