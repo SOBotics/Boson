@@ -181,8 +181,7 @@ public class BosonBot {
 
             Room otherRoom = client.joinRoom(otherRoomHost, otherRoomId);
             otherRoom.send("Boson started");
-            otherRoom.send("Tracking "+arguments[3]+" on "+arguments[2]+ " as directed in ["+room.getThumbs().getName()
-                    +"]("+ room.getHost().getBaseUrl()+"/rooms/"+room.getRoomId()+")");
+
             chatRoom = new ChatRoom(otherRoom);
             Map<Command, Object[]> userMentionCommands = new HashMap<>();
             userMentionCommands.put(new Alive(), new Object[0]);
@@ -193,6 +192,8 @@ public class BosonBot {
             chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(otherRoom, messageReplyCommands));
 
         }
+        chatRoom.getRoom().send("Tracking "+arguments[3]+" on "+arguments[2]+ " as directed in ["+room.getThumbs().getName()
+                +"]("+ room.getHost().getBaseUrl()+"/rooms/"+room.getRoomId()+")");
         return chatRoom;
     }
 
