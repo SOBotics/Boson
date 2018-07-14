@@ -97,13 +97,13 @@ public class BosonBot {
             }
             else {
                 ChatRoomService service;
+                String ID = getUniqueId();
                 service = new ChatRoomService(chatRoom, monitors);
                 String similarRoom = findChatRoomByRoomId(chatRoom.getRoomId());
                 if(similarRoom==null && chatRoom.getRoomId()!=room.getRoomId()){
                     service.initializeService();
                 }
                 service.startService();
-                String ID = getUniqueId();
                 bots.put(ID, new Bot(ID, chatRoom, service, message.getId()));
                 room.send("New tracker started: [" + ID + "](" + bots.get(ID).getCreationMessageUrl() + ")");
             }
