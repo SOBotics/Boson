@@ -17,7 +17,7 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
 
     public CommentMonitor(ChatRoom room, int frequency, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer) {
         super(room, frequency, site, apiKey, filters, printer);
-        previousTime = Instant.now().minusSeconds(60);
+        previousTime = Instant.now().minusSeconds(frequency);
     }
 
     @Override
