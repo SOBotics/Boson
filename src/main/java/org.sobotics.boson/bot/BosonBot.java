@@ -14,6 +14,7 @@ import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventListener;
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
 import org.sobotics.boson.framework.services.chat.monitors.*;
+import org.sobotics.boson.framework.services.chat.printers.CommentOneBoxPrinter;
 import org.sobotics.boson.framework.services.chat.printers.GenericContentPrinterService;
 import org.sobotics.boson.framework.services.chat.printers.ListOfTagsPrinter;
 import org.sobotics.chatexchange.chat.ChatHost;
@@ -59,15 +60,22 @@ public class BosonBot {
                     stopCommand(arguments[2]);
                     break;
                 case "list":
-                    room.send(String.join(";", bots.keySet()));
+                    listCommand();
                     break;
             }
         });
     }
 
+    private void listCommand() {
+        room.send(String.join(";", bots.keySet()));
+    }
+
     private void stopCommand(String argument) {
         if(bots.containsKey(argument)) {
             bots.get(argument).getChatRoomService().stopService();
+            if (findChatRoomByRoomId(bots.get(argument).getChatRoom().getRoomId())==null){
+                bots.get(argument).getChatRoomService().terminateService();
+            }
             bots.remove(argument);
             room.send("Bot "+ argument +" stopped");
         }
@@ -89,17 +97,12 @@ public class BosonBot {
             }
             else {
                 ChatRoomService service;
+                service = new ChatRoomService(chatRoom, monitors);
                 String similarRoom = findChatRoomByRoomId(chatRoom.getRoomId());
-                if(similarRoom!=null){
-                    room.send("Bot "+similarRoom+" runs in the same room. Adding the monitor to that");
-                    service = bots.get(similarRoom).getChatRoomService();
-                    for(Monitor monitor: monitors)
-                        service.addMonitor(monitor);
+                if(similarRoom==null && chatRoom.getRoomId()!=room.getRoomId()){
+                    service.initializeService();
                 }
-                else {
-                    service = new ChatRoomService(chatRoom, monitors);
-                    service.startService();
-                }
+                service.startService();
                 String ID = getUniqueId();
                 bots.put(ID, new Bot(ID, chatRoom, service, message.getId()));
                 room.send("New tracker started: [" + ID + "](" + bots.get(ID).getCreationMessageUrl() + ")");
@@ -141,7 +144,7 @@ public class BosonBot {
             case "comments":
                 filters = new Filter[]{new EmptyFilter<Comment>()};
                 monitors = new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters,
-                        new GenericContentPrinterService<>(site))};
+                        new CommentOneBoxPrinter<>(chatRoom))};
                 break;
             case "tag":
             case "tags":

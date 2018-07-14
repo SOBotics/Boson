@@ -15,5 +15,7 @@ public class Boson{
 
         new BosonBot(room, client).start();
 
+        //new PostPrinterBot(room, "stackoverflow", 10000000).start();
+
     }
 }
