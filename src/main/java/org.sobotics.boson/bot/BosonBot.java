@@ -1,6 +1,11 @@
 package org.sobotics.boson.bot;
 
 
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
+import org.sobotics.boson.bot.model.Filters;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
@@ -23,6 +28,8 @@ import org.sobotics.chatexchange.chat.Room;
 import org.sobotics.chatexchange.chat.StackExchangeClient;
 import org.sobotics.chatexchange.chat.event.EventType;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,12 +93,12 @@ public class BosonBot {
     }
 
     private void trackCommand(Message message) {
-        String arguments1[] = message.getPlainContent().split(" ");
-        if (arguments1.length == 5 || arguments1.length == 7) {
-            String site = arguments1[2];
-            String posttype = arguments1[3];
-            int frequency = Integer.parseInt(arguments1[4]);
-            ChatRoom chatRoom = getChatRoom(room, arguments1);
+        String arguments[] = message.getPlainContent().split(" ");
+        if (arguments.length == 5 || arguments.length == 7) {
+            String site = arguments[2];
+            String posttype = arguments[3];
+            int frequency = Integer.parseInt(arguments[4]);
+            ChatRoom chatRoom = getChatRoom(room, arguments);
             Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom);
             if(monitors==null) {
                 room.send("The only types supported are questions, answers and tags");
@@ -166,8 +173,10 @@ public class BosonBot {
         ChatHost otherRoomHost;
         ChatRoom chatRoom = new ChatRoom(room);
         if (arguments.length == 7) {
-            otherRoomId = Integer.parseInt(arguments[5]);
-            switch (arguments[6]) {
+            String roomId = arguments[5];
+            otherRoomId = Integer.parseInt(roomId);
+            final String roomHost = arguments[6];
+            switch (roomHost) {
                 case "stackoverflow":
                     otherRoomHost = ChatHost.STACK_OVERFLOW;
                     break;
@@ -175,7 +184,7 @@ public class BosonBot {
                     otherRoomHost = ChatHost.STACK_EXCHANGE;
                     break;
                 default:
-                    room.send("Chat host can either be `sstackoverflow` or `stackexchange`");
+                    room.send("Chat host can either be `stackoverflow` or `stackexchange`");
                     return null;
             }
 
@@ -208,5 +217,47 @@ public class BosonBot {
         }
         return null;
     }
+
+    private Namespace parseArguments(String[] args){
+
+        ArgumentParser parser = ArgumentParsers.newFor("track").build()
+                .description("Argument Parser for the bot.");
+        parser.addArgument("site").type(String.class)
+                .help("Site where the bot has to be run");
+        parser.addArgument("type").type(String.class)
+                .help("Type of the tracker needed, can be one of post, comment, answer, question, tag");
+        parser.addArgument("frequency").type(Integer.class)
+                .help("Frequency of the tracker in seconds");
+
+
+        parser.addArgument("-r", "--room").type(Integer.class).nargs("?")
+                .help("Set the room where it has to run");
+
+        parser.addArgument("-t", "--host").type(ChatHost.class).nargs("?")
+                .help("Set the chat host of that room");
+
+        parser.addArgument("-f", "--filter").type(Filters.class).nargs("?")
+                .help("Set the filters used by the bot");
+
+        parser.addArgument("-v", "--value").type(Filters.class).nargs("?")
+                .help("Set the value needed for the filter");
+
+
+        Namespace res = null;
+        try {
+            res = parser.parseArgs(args);
+        } catch (ArgumentParserException e){
+            StringWriter out = new StringWriter();
+            PrintWriter writer = new PrintWriter(out);
+            parser.handleError(e, writer);
+            System.out.println("error"+ out.toString());
+        }
+
+        System.out.println(res);
+
+
+        return res;
+    }
+
 
 }
