@@ -88,12 +88,13 @@ public class BosonBot {
     private void stopCommand(String argument) {
         try {
             if (bots.containsKey(argument)) {
-                bots.get(argument).getChatRoomService().stopService();
+                ChatRoomService chatRoomService = bots.get(argument).getChatRoomService();
                 int stoppingBotID = bots.get(argument).getChatRoom().getRoomId();
+                chatRoomService.stopService();
                 bots.remove(argument);
                 if (findChatRoomByRoomId(stoppingBotID) == null &&
                         stoppingBotID != room.getRoomId()) {
-                    bots.get(argument).getChatRoomService().terminateService();
+                    chatRoomService.terminateService();
                 }
                 room.send("Bot " + argument + " stopped");
             } else {
