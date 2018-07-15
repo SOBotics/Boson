@@ -4,5 +4,6 @@ public enum Filters {
     REPUTATION,
     LENGTH,
     USER_ID,
+    POST_ID,
     TAG
 }

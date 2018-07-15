@@ -216,6 +216,8 @@ public class BosonBot {
                     return new Filter[]{new LengthFilter(Integer.parseInt(value))};
                 case USER_ID:
                     return new Filter[]{new UserIdFilter(Integer.parseInt(value))};
+                case POST_ID:
+                    return new Filter[]{new PostIDFilter(Integer.parseInt(value))};
                 case TAG:
                     return new Filter[]{new TaggedFilter(value.split(";"))};
             }
