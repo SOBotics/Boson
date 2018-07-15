@@ -35,6 +35,7 @@ public abstract class Monitor <T,U>{
                 monitor(room, site, apiKey, filters, printer);
             } catch (IOException e) {
                 e.printStackTrace();
+                room.getRoom().send("Error while calling API: `"+ e.getMessage()+"`");
             }
         };
         service.scheduleAtFixedRate(runnable, 0, frequency, TimeUnit.SECONDS);
