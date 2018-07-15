@@ -262,6 +262,9 @@ public class BosonBot {
         parser.addArgument("-n", "--name").type(String.class).nargs("?")
                 .help("Give a name to your bot (we will generate a 10 digit value, if you don't)");
 
+        parser.addArgument("-p", "--printer").type(Printers.class).nargs("?")
+                .help("Set the printer to be used by the bot");
+
         parser.addArgument("-r", "--room").type(Integer.class).nargs("?")
                 .help("Set the room where it has to run");
 
