@@ -111,7 +111,7 @@ public class BosonBot {
         try {
             Namespace res = parseArguments(arguments);
 
-            if (res==null) return;
+            if (res == null) return;
 
             String site = res.getString("site");
             Type posttype = res.get("type");
@@ -119,13 +119,21 @@ public class BosonBot {
             Integer otherRoomId = res.getInt("room");
             ChatHost otherHost = res.get("host");
             Filters filter = res.get("filter");
-            Integer value = res.get("value");
+            String value = res.get("value");
             String ID = res.get("name");
-            if (bots.containsKey(ID)){
+            if (bots.containsKey(ID)) {
                 room.send("There is already another bot with the same name. Please create a unique name for your bot");
                 return;
             }
-            Filter[] filters = getFiltersFromFilter(filter, value);
+            Filter[] filters ;
+            try {
+                filters = getFiltersFromFilter(filter, value);
+            }
+            catch (NumberFormatException e){
+                e.printStackTrace();
+                room.send("`value` should be a Integer");
+                return;
+            }
 
             ChatRoom chatRoom;
             if (otherRoomId!=null) {
@@ -196,18 +204,22 @@ public class BosonBot {
 
     }
 
-    private Filter[] getFiltersFromFilter(Filters filter, Integer value) {
+    private Filter[] getFiltersFromFilter(Filters filter, String value) throws  NumberFormatException{
 
 
         if (filter!=null) {
+
             switch (filter) {
                 case REPUTATION:
-                    return new Filter[]{new ReputationFilter(value)};
+                    return new Filter[]{new ReputationFilter(Integer.parseInt(value))};
                 case LENGTH:
-                    return new Filter[]{new LengthFilter(value)};
+                    return new Filter[]{new LengthFilter(Integer.parseInt(value))};
                 case USER_ID:
-                    return new Filter[]{new UserIdFilter(value)};
+                    return new Filter[]{new UserIdFilter(Integer.parseInt(value))};
+                case TAG:
+                    return new Filter[]{new TaggedFilter(value.split(";"))};
             }
+
         }
 
         return new Filter[]{new EmptyFilter()};
@@ -299,7 +311,7 @@ public class BosonBot {
                 .choices(ChatHost.STACK_OVERFLOW, ChatHost.STACK_EXCHANGE)
                 .help("Set the chat host of that room");
 
-        parser.addArgument("-v", "--value").type(Integer.class).nargs("?")
+        parser.addArgument("-v", "--value").type(String.class).nargs("?")
                 .help("Set the value needed for the filter, depending on it's type");
 
         Namespace res;
