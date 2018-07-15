@@ -9,12 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sobotics.boson.bot.model.*;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
-import org.sobotics.boson.framework.model.stackexchange.Question;
 import org.sobotics.boson.framework.services.chat.ChatRoomService;
 import org.sobotics.boson.framework.services.chat.commands.Alive;
 import org.sobotics.boson.framework.services.chat.commands.Command;
 import org.sobotics.boson.framework.services.chat.filters.EmptyFilter;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
+import org.sobotics.boson.framework.services.chat.filters.LengthFilter;
+import org.sobotics.boson.framework.services.chat.filters.ReputationFilter;
 import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventListener;
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
 import org.sobotics.boson.framework.services.chat.monitors.*;
@@ -37,7 +38,7 @@ import java.util.Random;
 
 public class BosonBot {
 
-    private static Logger logger = LoggerFactory.getLogger(BosonBot.class);;
+    private static Logger logger = LoggerFactory.getLogger(BosonBot.class);
 
     private Room room;
     private StackExchangeClient client;
@@ -120,7 +121,8 @@ public class BosonBot {
             Integer otherRoomId = res.getInt("room");
             ChatHost otherHost = res.get("host");
             Filters filter = res.get("filter");
-
+            Integer value = res.get("value");
+            Filter[] filters = getFiltersFromFilter(filter, value);
             ChatRoom chatRoom;
             if (otherRoomId!=null) {
                 if (otherHost==null)
@@ -133,7 +135,7 @@ public class BosonBot {
 
             chatRoom.getRoom().send("Tracking "+posttype+" on "+site+ " as directed in ["+room.getThumbs().getName()
                     +"]("+ room.getHost().getBaseUrl()+"/rooms/"+room.getRoomId()+")");
-            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom);
+            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters);
             if(monitors==null) {
                 room.send("The only types supported are questions, answers and tags");
             }
@@ -160,6 +162,25 @@ public class BosonBot {
         }
     }
 
+    private Filter[] getFiltersFromFilter(Filters filter, Integer value) {
+
+
+        switch (filter){
+            case HEAT_DETECTOR:
+                break;
+            case ALL_POSTS:
+                break;
+            case REPUTATION:
+                return new Filter[]{new ReputationFilter(value)};
+            case CREATION_DATE:
+                break;
+            case LENGTH:
+                return new Filter[]{new LengthFilter(value)};
+        }
+
+        return new Filter[]{new EmptyFilter()};
+    }
+
     private String getUniqueId() {
         char[] characs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
         Random secureRandom = new SecureRandom();
@@ -170,7 +191,7 @@ public class BosonBot {
     }
 
     private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom) {
-        return getMonitors(site, posttype, frequency, chatRoom, new Filter[]{new EmptyFilter<Question>()});
+        return getMonitors(site, posttype, frequency, chatRoom, new Filter[]{new EmptyFilter<>()});
     }
     private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom, Filter[] filters) {
 
@@ -253,7 +274,7 @@ public class BosonBot {
         parser.addArgument("-h", "--help").action(new BosonHelpArgumentAction())
                 .help("Display this message");
 
-        Namespace res = null;
+        Namespace res;
         try {
             res = parser.parseArgs(args);
         } catch (BosonHelpScreenParserException e){

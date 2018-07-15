@@ -4,5 +4,6 @@ public enum Filters {
     HEAT_DETECTOR,
     ALL_POSTS,
     REPUTATION,
-    CREATION_DATE
+    CREATION_DATE,
+    LENGTH
 }
