@@ -10,13 +10,12 @@ import java.io.StringWriter;
 import java.util.Map;
 
 public class BosonHelpArgumentAction implements ArgumentAction {
-    
+
     @Override
     public void run(ArgumentParser parser, Argument argument, Map<String, Object> map, String s, Object o) throws ArgumentParserException {
         StringWriter out = new StringWriter();
         PrintWriter writer = new PrintWriter(out);
         parser.printHelp(writer);
-        System.out.println("printing this "+out.toString());
         throw new BosonHelpScreenParserException(parser, out.toString());
     }
 
