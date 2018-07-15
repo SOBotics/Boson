@@ -10,7 +10,8 @@ public class GenericContentPrinterService<T extends Content> implements PrinterS
     }
 
     public String print(T content){
-        return "[ [Boson](https://git.io/vA9TM) ] New "+ content.getType()+
-                " posted on "+ sitename + " " + content.getLink();
+        return "[ [Boson](https://git.io/vA9TM) ] New ["+ content.getType()+
+                "]("+content.getLink()+") posted on "+ sitename + "  by [" +
+                content.getOwner().getDisplayName()+"]("+content.getOwner().getLink()+")";
     }
 }

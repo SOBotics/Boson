@@ -19,6 +19,7 @@ import org.sobotics.boson.framework.services.chat.monitors.*;
 import org.sobotics.boson.framework.services.chat.printers.ContentOneBoxPrinter;
 import org.sobotics.boson.framework.services.chat.printers.GenericContentPrinterService;
 import org.sobotics.boson.framework.services.chat.printers.ListOfTagsPrinter;
+import org.sobotics.boson.framework.services.chat.printers.PrinterService;
 import org.sobotics.chatexchange.chat.ChatHost;
 import org.sobotics.chatexchange.chat.Message;
 import org.sobotics.chatexchange.chat.Room;
@@ -134,7 +135,9 @@ public class BosonBot {
 
             chatRoom.getRoom().send("Tracking "+posttype+" on "+site+ " as directed in ["+room.getThumbs().getName()
                     +"]("+ room.getHost().getBaseUrl()+"/rooms/"+room.getRoomId()+")");
-            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters);
+
+            PrinterService printerService = getPrinterServiceFromPrinter(res, chatRoom);
+            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters, printerService);
             if(monitors==null) {
                 room.send("The only types supported are questions, answers and tags");
             }
@@ -160,6 +163,33 @@ public class BosonBot {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private PrinterService getPrinterServiceFromPrinter(Namespace res, ChatRoom chatRoom) {
+
+        Printers printer = res.get("printer");
+        Type type = res.get("type");
+        String site = res.getString("site");
+
+        if(printer==null){
+            switch (type){
+                case questions:
+                case answers:
+                case comments:
+                case posts:
+                    return new GenericContentPrinterService<>(site);
+                case tags:
+                    return new ListOfTagsPrinter(site);
+            }
+        }
+
+        switch (printer){
+            case ONE_BOX:
+                return new ContentOneBoxPrinter<>(chatRoom);
+        }
+
+        return new GenericContentPrinterService<>(site);
+
     }
 
     private Filter[] getFiltersFromFilter(Filters filter, Integer value) {
@@ -188,28 +218,21 @@ public class BosonBot {
         return ID.toString();
     }
 
-    private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom, Filter[] filters) {
+    private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom, Filter[] filters,
+                                  PrinterService printerService) {
 
         Monitor[] monitors = null;
         String apiKey = "HYWHTHpYImfSRnhkArqu8Q((";
 
         switch (posttype) {
             case questions:
-                monitors = new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, filters,
-                        new GenericContentPrinterService<>(site))};
-                break;
+                return new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
             case answers:
-                monitors = new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, filters,
-                        new GenericContentPrinterService<>(site))};
-                break;
+                return new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
             case comments:
-                monitors = new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters,
-                        new ContentOneBoxPrinter<>(chatRoom))};
-                break;
+                return new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
             case tags:
-                monitors = new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, filters,
-                        new ListOfTagsPrinter(site))};
-                break;
+                return new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
         }
         return monitors;
     }
