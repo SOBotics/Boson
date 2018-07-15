@@ -121,6 +121,10 @@ public class BosonBot {
             Filters filter = res.get("filter");
             Integer value = res.get("value");
             String ID = res.get("name");
+            if (bots.containsKey(ID)){
+                room.send("There is already another bot with the same name. Please create a unique name for your bot");
+                return;
+            }
             Filter[] filters = getFiltersFromFilter(filter, value);
 
             ChatRoom chatRoom;
