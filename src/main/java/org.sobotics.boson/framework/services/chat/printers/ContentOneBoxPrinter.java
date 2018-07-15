@@ -3,10 +3,10 @@ package org.sobotics.boson.framework.services.chat.printers;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.model.stackexchange.Content;
 
-public class CommentOneBoxPrinter<T extends Content> implements PrinterService<T>{
+public class ContentOneBoxPrinter<T extends Content> implements PrinterService<T>{
     private ChatRoom chatRoom;
 
-    public CommentOneBoxPrinter(ChatRoom chatRoom) {
+    public ContentOneBoxPrinter(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
     }
 

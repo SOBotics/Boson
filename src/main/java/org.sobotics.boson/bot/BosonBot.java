@@ -16,7 +16,7 @@ import org.sobotics.boson.framework.services.chat.filters.*;
 import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventListener;
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
 import org.sobotics.boson.framework.services.chat.monitors.*;
-import org.sobotics.boson.framework.services.chat.printers.CommentOneBoxPrinter;
+import org.sobotics.boson.framework.services.chat.printers.ContentOneBoxPrinter;
 import org.sobotics.boson.framework.services.chat.printers.GenericContentPrinterService;
 import org.sobotics.boson.framework.services.chat.printers.ListOfTagsPrinter;
 import org.sobotics.chatexchange.chat.ChatHost;
@@ -204,7 +204,7 @@ public class BosonBot {
                 break;
             case comments:
                 monitors = new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters,
-                        new CommentOneBoxPrinter<>(chatRoom))};
+                        new ContentOneBoxPrinter<>(chatRoom))};
                 break;
             case tags:
                 monitors = new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, filters,
