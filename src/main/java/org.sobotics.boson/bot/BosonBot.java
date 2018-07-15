@@ -12,10 +12,7 @@ import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.services.chat.ChatRoomService;
 import org.sobotics.boson.framework.services.chat.commands.Alive;
 import org.sobotics.boson.framework.services.chat.commands.Command;
-import org.sobotics.boson.framework.services.chat.filters.EmptyFilter;
-import org.sobotics.boson.framework.services.chat.filters.Filter;
-import org.sobotics.boson.framework.services.chat.filters.LengthFilter;
-import org.sobotics.boson.framework.services.chat.filters.ReputationFilter;
+import org.sobotics.boson.framework.services.chat.filters.*;
 import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventListener;
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
 import org.sobotics.boson.framework.services.chat.monitors.*;
@@ -166,16 +163,12 @@ public class BosonBot {
 
 
         switch (filter){
-            case HEAT_DETECTOR:
-                break;
-            case ALL_POSTS:
-                break;
             case REPUTATION:
                 return new Filter[]{new ReputationFilter(value)};
-            case CREATION_DATE:
-                break;
             case LENGTH:
                 return new Filter[]{new LengthFilter(value)};
+            case USER_ID:
+                return new Filter[]{new UserIdFilter(value)};
         }
 
         return new Filter[]{new EmptyFilter()};
@@ -190,9 +183,6 @@ public class BosonBot {
         return ID.toString();
     }
 
-    private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom) {
-        return getMonitors(site, posttype, frequency, chatRoom, new Filter[]{new EmptyFilter<>()});
-    }
     private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom, Filter[] filters) {
 
         Monitor[] monitors = null;
