@@ -75,7 +75,7 @@ public class BosonBot {
                 }
             });
         }
-        catch (Exception e){
+        catch (Exception e){ // TODO : REMOVE THE POKEMON EXCEPTION HANDLING AFTER TESTING IS OVER
             e.printStackTrace();
         }
     }
@@ -119,7 +119,9 @@ public class BosonBot {
             ChatHost otherHost = res.get("host");
             Filters filter = res.get("filter");
             Integer value = res.get("value");
+            String ID = res.get("name");
             Filter[] filters = getFiltersFromFilter(filter, value);
+
             ChatRoom chatRoom;
             if (otherRoomId!=null) {
                 if (otherHost==null)
@@ -138,7 +140,8 @@ public class BosonBot {
             }
             else {
                 ChatRoomService service;
-                String ID = getUniqueId();
+                if (ID==null)
+                    ID = getUniqueId();
                 service = new ChatRoomService(chatRoom, monitors);
                 String similarRoom;
                 similarRoom = findChatRoomByRoomId(chatRoom.getRoomId());
@@ -162,13 +165,15 @@ public class BosonBot {
     private Filter[] getFiltersFromFilter(Filters filter, Integer value) {
 
 
-        switch (filter){
-            case REPUTATION:
-                return new Filter[]{new ReputationFilter(value)};
-            case LENGTH:
-                return new Filter[]{new LengthFilter(value)};
-            case USER_ID:
-                return new Filter[]{new UserIdFilter(value)};
+        if (filter!=null) {
+            switch (filter) {
+                case REPUTATION:
+                    return new Filter[]{new ReputationFilter(value)};
+                case LENGTH:
+                    return new Filter[]{new LengthFilter(value)};
+                case USER_ID:
+                    return new Filter[]{new UserIdFilter(value)};
+            }
         }
 
         return new Filter[]{new EmptyFilter()};
@@ -248,6 +253,15 @@ public class BosonBot {
                 .help("Frequency of the tracker in seconds");
 
 
+        parser.addArgument("-f", "--filter").type(Filters.class).nargs("?")
+                .help("Set the filters used by the bot");
+
+        parser.addArgument("-h", "--help").action(new BosonHelpArgumentAction())
+                .help("Display this message");
+
+        parser.addArgument("-n", "--name").type(String.class).nargs("?")
+                .help("Give a name to your bot (we will generate a 10 digit value, if you don't)");
+
         parser.addArgument("-r", "--room").type(Integer.class).nargs("?")
                 .help("Set the room where it has to run");
 
@@ -255,14 +269,8 @@ public class BosonBot {
                 .choices(ChatHost.STACK_OVERFLOW, ChatHost.STACK_EXCHANGE)
                 .help("Set the chat host of that room");
 
-        parser.addArgument("-f", "--filter").type(Filters.class).nargs("?")
-                .help("Set the filters used by the bot");
-
         parser.addArgument("-v", "--value").type(Integer.class).nargs("?")
                 .help("Set the value needed for the filter, depending on it's type");
-
-        parser.addArgument("-h", "--help").action(new BosonHelpArgumentAction())
-                .help("Display this message");
 
         Namespace res;
         try {
