@@ -6,6 +6,7 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.sobotics.boson.bot.model.Filters;
+import org.sobotics.boson.bot.model.TrackParsingException;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
@@ -218,7 +219,7 @@ public class BosonBot {
         return null;
     }
 
-    private Namespace parseArguments(String[] args){
+    private Namespace parseArguments(String[] args) throws TrackParsingException {
 
         ArgumentParser parser = ArgumentParsers.newFor("track").build()
                 .description("Argument Parser for the bot.");
@@ -242,7 +243,6 @@ public class BosonBot {
         parser.addArgument("-v", "--value").type(Filters.class).nargs("?")
                 .help("Set the value needed for the filter");
 
-
         Namespace res = null;
         try {
             res = parser.parseArgs(args);
@@ -250,11 +250,8 @@ public class BosonBot {
             StringWriter out = new StringWriter();
             PrintWriter writer = new PrintWriter(out);
             parser.handleError(e, writer);
-            System.out.println("error"+ out.toString());
+            throw new TrackParsingException(out.toString());
         }
-
-        System.out.println(res);
-
 
         return res;
     }
