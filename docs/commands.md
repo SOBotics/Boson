@@ -47,11 +47,11 @@ Thanks to it being very generic, Boson usually overwhelms users with it's availa
   
        @Boson track stackoverflow questions 180
        
- - Tracking the next comment on the highest voted post  on the workplace
+ - Tracking the next comment on question id 93696 on the workplace (highest voted post on that site)
  
        @Boson track comments 500 -f POST_ID -v 93696
  
- - Tracking all the answers posted by Shog9 on Meta Stack Exchange
+ - Tracking all the answers posted by Shog9 (user 811) on Meta Stack Exchange
  
        @Boson track meta answers 3000 -f USER_ID -v 811 
       
