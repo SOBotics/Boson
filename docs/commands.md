@@ -47,19 +47,19 @@ Thanks to it being very generic, Boson usually overwhelms users with it's availa
   
        @Boson track stackoverflow questions 180
        
- - Tracking the next comment on question id 93696 on the workplace (highest voted post on that site)
+ - Tracking the next comment every 500 seconds on PostId 93696 (in this case, a question) on the workplace (highest voted post on that site)
  
        @Boson track comments 500 -f POST_ID -v 93696
  
- - Tracking all the answers posted by Shog9 (user 811) on Meta Stack Exchange
+ - Tracking all the answers every 3000 seconds posted by Shog9 (user 811) on Meta Stack Exchange
  
        @Boson track meta answers 3000 -f USER_ID -v 811 
       
- - Tracking the next featured meta post, in a private room
+ - Tracking the next featured meta post every 1000 seconds, in room 54445 on chat.stackexchange.com (a private room)
  
        @Boson track meta questions 1000 -f TAG -v featured -r 54445 --host STACK_EXCHANGE
        
- - Tracking recently created tags on interpersonal skills
+ - Tracking recently created tags on interpersonal skills every 21600 seconds
  
        @Boson track interpersonal tags 21600
        
