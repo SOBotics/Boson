@@ -5,7 +5,6 @@ import org.sobotics.boson.framework.model.stackexchange.Post;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.printers.PrinterService;
 import org.sobotics.boson.framework.services.data.ApiService;
-import org.sobotics.boson.framework.services.data.StackExchangeApiService;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -21,8 +20,7 @@ public class PostMonitor extends Monitor<Post, Post>{
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Post>[] filters, PrinterService<Post> printer) throws IOException {
-        ApiService apiService = new StackExchangeApiService(apiKey);
+    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Post>[] filters, PrinterService<Post> printer, ApiService apiService) throws IOException {
         List<Post> posts = apiService.getPostsByCreation(site, previousTime);
         for (Post post: posts){
             for (Filter<Post> filter: filters){

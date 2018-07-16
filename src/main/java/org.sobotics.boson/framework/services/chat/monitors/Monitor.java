@@ -46,7 +46,7 @@ public abstract class Monitor <T,U>{
     public ScheduledExecutorService startMonitor(){
         Runnable runnable = () -> {
             try {
-                monitor(room, site, apiKey, filters, printer);
+                monitor(room, site, apiKey, filters, printer, apiService);
             } catch (IOException e) {
                 e.printStackTrace();
                 room.getRoom().send("Error while calling API: `"+ e.getMessage()+"`");
@@ -60,5 +60,5 @@ public abstract class Monitor <T,U>{
         service.shutdown();
     }
 
-    protected abstract void monitor(ChatRoom room, String site, String apiKey, Filter<T> filters[], PrinterService<U> printer) throws IOException;
+    protected abstract void monitor(ChatRoom room, String site, String apiKey, Filter<T>[] filters, PrinterService<U> printer, ApiService apiService) throws IOException;
 }

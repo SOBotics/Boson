@@ -5,7 +5,6 @@ import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.printers.PrinterService;
 import org.sobotics.boson.framework.services.data.ApiService;
-import org.sobotics.boson.framework.services.data.StackExchangeApiService;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -21,8 +20,7 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer) throws IOException {
-        ApiService apiService = new StackExchangeApiService(apiKey);
+    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer, ApiService apiService) throws IOException {
         List<Comment> comments = apiService.getComments(site, 1, 100, previousTime);
         for (Comment comment: comments){
             for (Filter<Comment> filter: filters){

@@ -5,7 +5,6 @@ import org.sobotics.boson.framework.model.stackexchange.Answer;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.printers.PrinterService;
 import org.sobotics.boson.framework.services.data.ApiService;
-import org.sobotics.boson.framework.services.data.StackExchangeApiService;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -21,8 +20,7 @@ public class AnswerMonitor extends Monitor<Answer, Answer>{
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Answer>[] filters, PrinterService<Answer> printer) throws IOException {
-        ApiService apiService = new StackExchangeApiService(apiKey);
+    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Answer>[] filters, PrinterService<Answer> printer, ApiService apiService) throws IOException {
         List<Answer> answers = apiService.getAnswers(site, 1, 100, previousTime);
         for (Answer answer: answers){
             for (Filter<Answer> filter: filters){
