@@ -240,7 +240,6 @@ public class BosonBot {
     private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom, Filter[] filters,
                                   PrinterService printerService) {
 
-        Monitor[] monitors = null;
         String apiKey = "HYWHTHpYImfSRnhkArqu8Q((";
 
         switch (posttype) {
@@ -250,10 +249,12 @@ public class BosonBot {
                 return new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
             case comments:
                 return new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
+            case posts:
+                return new Monitor[]{new PostMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
             case tags:
                 return new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
         }
-        return monitors;
+        return null;
     }
 
     private ChatRoom getChatRoom(int otherRoomId, ChatHost otherRoomHost) {
