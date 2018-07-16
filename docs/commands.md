@@ -89,11 +89,11 @@ Boson is still under active development. As of now, the available content types 
  
  The available filters (and the expected values) are:
  
- 1. Reputation  (The reputation of the poster at which it should be filtered. Should be a number)
- 2. Length (The length of the content at which it should be filtered. Should be a number)
- 3. PostID (The ID of the post on which you need to track comments. Should be a number)
- 4. UserID (The ID of the user whose posts you need to track. Should be a number)
- 5. Tag (The name of the tag which you need to filter the questions. Should be a ; separated list of tag names)
+ 1. REPUTATION  (The reputation of the poster at which it should be filtered. Should be a number)
+ 2. LENGTH (The length of the content at which it should be filtered. Should be a number)
+ 3. POST_ID (The ID of the post on which you need to track comments. Should be a number)
+ 4. USER_ID (The ID of the user whose posts you need to track. Should be a number)
+ 5. TAG (The name of the tag which you need to filter the questions. Should be a ; separated list of tag names)
  
  ### Using filters to obtain the data you need
  
