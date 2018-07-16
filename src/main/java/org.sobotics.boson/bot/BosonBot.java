@@ -29,10 +29,7 @@ import org.sobotics.chatexchange.chat.event.EventType;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class BosonBot {
 
@@ -119,16 +116,18 @@ public class BosonBot {
             int frequency = res.getInt("frequency");
             Integer otherRoomId = res.getInt("room");
             ChatHost otherHost = res.get("host");
-            Filters filter = res.get("filter");
-            String value = res.get("value");
+            List<Filters> requestedFilters = res.get("filter");
+            List<String> requestedValues = res.get("value");
             String ID = res.get("name");
             if (bots.containsKey(ID)) {
                 room.send("There is already another bot with the same name. Please create a unique name for your bot");
                 return;
             }
-            Filter[] filters ;
+            List<Filter> filters = new ArrayList<>();
             try {
-                filters = getFiltersFromFilter(filter, value);
+                for(int i = 0; i<requestedFilters.size(); i++) {
+                    filters.add(getFilterFromRequestedFilter(requestedFilters.get(i), requestedValues.get(i)));
+                }
             }
             catch (NumberFormatException e){
                 e.printStackTrace();
@@ -150,7 +149,7 @@ public class BosonBot {
                     +"]("+ room.getHost().getBaseUrl()+"/rooms/"+room.getRoomId()+")");
 
             PrinterService printerService = getPrinterServiceFromPrinter(res, chatRoom);
-            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters, printerService);
+            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters.toArray(new Filter[filters.size()]), printerService);
             if(monitors==null) {
                 room.send("The only types supported are questions, answers and tags");
             }
@@ -205,27 +204,26 @@ public class BosonBot {
 
     }
 
-    private Filter[] getFiltersFromFilter(Filters filter, String value) throws  NumberFormatException{
-
+    private Filter getFilterFromRequestedFilter(Filters filter, String value) throws  NumberFormatException{
 
         if (filter!=null) {
 
             switch (filter) {
                 case REPUTATION:
-                    return new Filter[]{new ReputationFilter(Integer.parseInt(value))};
+                    return new ReputationFilter(Integer.parseInt(value));
                 case LENGTH:
-                    return new Filter[]{new LengthFilter(Integer.parseInt(value))};
+                    return new LengthFilter(Integer.parseInt(value));
                 case USER_ID:
-                    return new Filter[]{new UserIdFilter(Integer.parseInt(value))};
+                    return new UserIdFilter(Integer.parseInt(value));
                 case POST_ID:
-                    return new Filter[]{new PostIDFilter(Integer.parseInt(value))};
+                    return new PostIDFilter(Integer.parseInt(value));
                 case TAG:
-                    return new Filter[]{new TaggedFilter(value.split(";"))};
+                    return new TaggedFilter(value.split(";"));
             }
 
         }
 
-        return new Filter[]{new EmptyFilter()};
+        return new EmptyFilter();
     }
 
     private String getUniqueId() {
@@ -296,7 +294,7 @@ public class BosonBot {
                 .help("Frequency of the tracker in seconds");
 
 
-        parser.addArgument("-f", "--filter").type(Filters.class).nargs("?")
+        parser.addArgument("-f", "--filter").type(Filters.class).nargs("*")
                 .help("Set the filters used by the bot");
 
         parser.addArgument("-h", "--help").action(new BosonHelpArgumentAction())
@@ -315,7 +313,7 @@ public class BosonBot {
                 .choices(ChatHost.STACK_OVERFLOW, ChatHost.STACK_EXCHANGE)
                 .help("Set the chat host of that room");
 
-        parser.addArgument("-v", "--value").type(String.class).nargs("?")
+        parser.addArgument("-v", "--value").type(String.class).nargs("*")
                 .help("Set the value needed for the filter, depending on it's type");
 
         Namespace res;
