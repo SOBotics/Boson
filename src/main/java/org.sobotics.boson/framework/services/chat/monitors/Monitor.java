@@ -3,6 +3,8 @@ package org.sobotics.boson.framework.services.chat.monitors;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.printers.PrinterService;
+import org.sobotics.boson.framework.services.data.ApiService;
+import org.sobotics.boson.framework.services.data.StackExchangeApiService;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -18,6 +20,7 @@ public abstract class Monitor <T,U>{
     private Filter<T> filters[];
     private PrinterService<U> printer;
     private ScheduledExecutorService service;
+    private ApiService apiService;
 
     public Monitor(ChatRoom room, int frequency, String site, String apiKey, Filter<T>[] filters, PrinterService<U> printer) {
         this.room = room;
@@ -27,6 +30,17 @@ public abstract class Monitor <T,U>{
         this.apiKey = apiKey;
         this.printer = printer;
         this.service = Executors.newSingleThreadScheduledExecutor();
+        this.apiService = new StackExchangeApiService(apiKey);
+    }
+    public Monitor(ChatRoom room, int frequency, String site, String apiKey, Filter<T>[] filters, PrinterService<U> printer, ApiService apiService) {
+        this.room = room;
+        this.frequency = frequency;
+        this.site = site;
+        this.filters = filters;
+        this.apiKey = apiKey;
+        this.printer = printer;
+        this.service = Executors.newSingleThreadScheduledExecutor();
+        this.apiService = apiService;
     }
 
     public ScheduledExecutorService startMonitor(){
