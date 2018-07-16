@@ -18,6 +18,10 @@ public abstract class ApiService {
         return getAnswers(site, page, pageSize, fromDate, Instant.now(), Ordering.DESC, AnswerSorting.ACTIVITY);
     }
 
+    public List<Answer> getAnswersByCreation(String site, int page, int pageSize, Instant fromDate) throws IOException {
+        return getAnswers(site, page, pageSize, fromDate, Instant.now(), Ordering.ASC, AnswerSorting.CREATION);
+    }
+
     public List<Post> getPosts(String site) throws IOException {
         return getPosts(site, 1, 30, null, null, Ordering.DESC, PostSorting.ACTIVITY);
     }
