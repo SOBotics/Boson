@@ -125,9 +125,12 @@ public class BosonBot {
             }
             List<Filter> filters = new ArrayList<>();
             try {
-                for(int i = 0; i<requestedFilters.size(); i++) {
-                    filters.add(getFilterFromRequestedFilter(requestedFilters.get(i), requestedValues.get(i)));
+                if (requestedFilters!=null) {
+                    for (int i = 0; i < requestedFilters.size(); i++) {
+                        filters.add(getFilterFromRequestedFilter(requestedFilters.get(i), requestedValues.get(i)));
+                    }
                 }
+                else filters.add(new EmptyFilter());
             }
             catch (NumberFormatException e){
                 e.printStackTrace();
