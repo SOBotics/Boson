@@ -53,7 +53,7 @@ Thanks to it being very generic, Boson usually overwhelms users with it's availa
        
  - Tracking the next comment every 500 seconds on PostId 93696 (in this case, a question) on the workplace (highest voted post on that site)
  
-       @Boson track comments 500 -f POST_ID -v 93696
+       @Boson track workplace comments 500 -f POST_ID -v 93696
  
  - Tracking all the answers every 3000 seconds posted by Shog9 (user 811) on Meta Stack Exchange
  
@@ -63,9 +63,9 @@ Thanks to it being very generic, Boson usually overwhelms users with it's availa
  
        @Boson track meta questions 1000 -f TAG -v featured -r 54445 --host STACK_EXCHANGE
        
- - Tracking recently created tags on interpersonal skills every 21600 seconds
+ - Tracking recently created tags on interpersonal skills every 21600 seconds. (You can use either the sitename, i.e, "interpersonal" or the entire url "interpersonal.stackexchange.com". Both of them work.)
  
-       @Boson track interpersonal tags 21600
+       @Boson track interpersonal.stackexchange.com tags 21600
        
 
 ## Content types
