@@ -109,7 +109,7 @@ Boson is still under active development. As of now, the available content types 
   
   You can add multiple requests as well, for example: 
   
-      @Boson track stackoverflow comments 100 -f REPUTATION LENGTH -v -50 -50
+      @Boson track stackoverflow comments 100 -f REPUTATION LENGTH -v -50 -150
       
-  would track all the comments with a length lesser than 50 characters and are posted by users below 50 reputation. 
+  would track all the comments with a length lesser than 150 characters and are posted by users below 50 reputation. Make sure that the filters and its values line up respectively. 
  
