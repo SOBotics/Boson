@@ -47,6 +47,10 @@ Thanks to it being very generic, Boson usually overwhelms users with it's availa
   
        @Boson track stackoverflow questions 180
        
+ - Tracking all the new answers posted on Meta Stack Overflow every 1 hr (3600 seconds) and naming the tracker as `MSO_tracker`
+  
+       @Boson track meta.stackoverflow answers 3600 --name MSO_tracker
+       
  - Tracking the next comment every 500 seconds on PostId 93696 (in this case, a question) on the workplace (highest voted post on that site)
  
        @Boson track comments 500 -f POST_ID -v 93696
