@@ -111,5 +111,5 @@ Boson is still under active development. As of now, the available content types 
   
       @Boson track stackoverflow comments 100 -f REPUTATION LENGTH -v -50 -150
       
-  would track all the comments that are posted by users below 50 reputation and with a length lesser than 150 characters. Make sure that the filters and its values line up respectively. 
+  would track all the comments that are posted by users below 50 reputation and with a length lesser than 150 characters. The filters can be in any order but make sure that the filter name and its value line up respectively. 
  
