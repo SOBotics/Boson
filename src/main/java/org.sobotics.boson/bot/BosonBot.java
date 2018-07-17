@@ -289,9 +289,9 @@ public class BosonBot {
 
         ArgumentParser parser = ArgumentParsers.newFor("track").addHelp(false).build()
                 .description("Argument Parser for the bot.");
-        parser.addArgument("site").type(String.class)
+        parser.addArgument("site").type(String.class).metavar("sitename")
                 .help("Site where the bot has to be run");
-        parser.addArgument("type").type(Type.class).metavar("type")
+        parser.addArgument("type").type(Type.class).metavar("trackingType")
                 .help("Type of the tracker needed. Can be one of {questions,answers,comments,posts,tags}");
         parser.addArgument("frequency").type(Integer.class)
                 .help("Frequency of the tracker in seconds");

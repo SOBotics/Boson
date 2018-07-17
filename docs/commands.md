@@ -8,21 +8,21 @@ The complete help and usage of the track command is:
 
 
 
-    usage: track [-f [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG}]] [-h]
-                 [-n [NAME]] [-p [{ONE_BOX}]] [-r [ROOM]]
-                 [-t [{STACK_OVERFLOW,STACK_EXCHANGE}]] [-v [VALUE]] site type
-                 frequency
+    usage: track [-f [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} ...]]]
+                 [-h] [-n [NAME]] [-p [{ONE_BOX}]] [-r [ROOM]]
+                 [-t [{STACK_OVERFLOW,STACK_EXCHANGE}]]
+                 [-v [VALUE [VALUE ...]]] sitename trackingType frequency
     
     Argument Parser for the bot.
     
     positional arguments:
-      site                   Site where the bot has to be run
-      type                   Type  of  the  tracker  needed.   Can  be  one  of
+      sitename               Site where the bot has to be run
+      trackingType           Type  of  the  tracker  needed.   Can  be  one  of
                              {questions,answers,comments,posts,tags}
       frequency              Frequency of the tracker in seconds
     
     named arguments:
-      -f [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG}], --filter [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG}]
+      -f [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} ...]], --filter [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} ...]]
                              Set the filters used by the bot
       -h, --help             Display this message
       -n [NAME], --name [NAME]
@@ -34,7 +34,7 @@ The complete help and usage of the track command is:
                              Set the room where it has to run
       -t [{STACK_OVERFLOW,STACK_EXCHANGE}], --host [{STACK_OVERFLOW,STACK_EXCHANGE}]
                              Set the chat host of that room
-      -v [VALUE], --value [VALUE]
+      -v [VALUE [VALUE ...]], --value [VALUE [VALUE ...]]
                              Set the value needed for  the filter, depending on
                              it's type
                              
