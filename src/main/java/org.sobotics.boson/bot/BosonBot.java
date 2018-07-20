@@ -220,6 +220,8 @@ public class BosonBot {
                     return new UserIdFilter(Integer.parseInt(value));
                 case POST_ID:
                     return new PostIDFilter(Integer.parseInt(value));
+                case CONTAINS:
+                    return new BodyFilter(value);
                 case TAG:
                     return new TaggedFilter(value.split(";"));
             }

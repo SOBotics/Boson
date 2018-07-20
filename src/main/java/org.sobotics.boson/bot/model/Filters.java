@@ -5,5 +5,6 @@ public enum Filters {
     LENGTH,
     USER_ID,
     POST_ID,
+    CONTAINS,
     TAG
 }
