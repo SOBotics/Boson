@@ -126,6 +126,29 @@ public class StackExchangeApiService extends ApiService{
         String tagsUrl = API_URL + "/tags";
         final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
         final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
+        JsonObject json = getTagsJson(site, page, pageSize, order, sort, inName, filter, tagsUrl, fromDateString, toDateString);
+        JsonArray array = json.get("items").getAsJsonArray();
+        return  getObjectFromJson(array, Tag.class);
+    }
+
+    @Override
+    public List<Tag> getTags(String site, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException {
+        String filter = "!9Z(-wqiNh";
+        String tagsUrl = API_URL + "/tags";
+        final String fromDateString = fromDate!=null?String.valueOf(fromDate.getEpochSecond()):"";
+        final String toDateString = toDate!=null?String.valueOf(toDate.getEpochSecond()):"";
+        JsonArray array = new JsonArray();
+        JsonObject json;
+        int page = 1;
+        do {
+            json = getTagsJson(site, page, 100, order, sort, inName, filter, tagsUrl, fromDateString, toDateString);
+            array.addAll(json.get("items").getAsJsonArray());
+            page+=1;
+        } while (json.has("has_more") && json.get("has_more").getAsBoolean());
+        return  getObjectFromJson(array, Tag.class);
+    }
+
+    private JsonObject getTagsJson(String site, int page, int pageSize, Ordering order, TagSorting sort, String inName, String filter, String tagsUrl, String fromDateString, String toDateString) throws IOException {
         JsonObject json =  HttpRequestUtils.get(tagsUrl,
                 "order",order.name(),
                 "sort",sort.name(),
@@ -139,9 +162,8 @@ public class StackExchangeApiService extends ApiService{
                 "key",apiKey,
                 "access_token",apiToken);
         handleBackoff(json);
-        JsonArray array = json.get("items").getAsJsonArray();
         System.out.println(site+" : "+json);
-        return  getObjectFromJson(array, Tag.class);
+        return json;
     }
 
     @Override

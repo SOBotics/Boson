@@ -31,6 +31,11 @@ public class ApiCacheApiService extends ApiService {
     }
 
     @Override
+    public List<Tag> getTags(String site, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException {
+        return null;
+    }
+
+    @Override
     public List<Post> getPosts(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, PostSorting sort) throws IOException {
         return null;
     }

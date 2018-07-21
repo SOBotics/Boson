@@ -58,6 +58,8 @@ public abstract class ApiService {
 
     public abstract List<Tag> getTags(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException;
 
+    public abstract List<Tag> getTags(String site, Instant fromDate, Instant toDate, Ordering order, TagSorting sort, String inName) throws IOException;
+
     public abstract List<Post> getPosts(String site, int page, int pageSize, Instant fromDate, Instant toDate, Ordering order, PostSorting sort) throws IOException;
 
     public abstract List<Post> getPosts(String site, Instant fromDate, Instant toDate, Ordering order, PostSorting sort) throws IOException;
