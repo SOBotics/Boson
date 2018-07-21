@@ -22,7 +22,7 @@ public class TagMonitor extends Monitor<Tag, List<Tag>>{
 
     @Override
     protected void monitor(ChatRoom room, String site, String apiKey, Filter<Tag>[] filters, PrinterService<List<Tag>> printer, ApiService apiService) throws IOException {
-        List<Tag> tags = apiService.getTags(site, 1, 100, previousTime);
+        List<Tag> tags = apiService.getTags(site,  previousTime);
         List<Tag> filteredTags = new ArrayList<>();
         for (Tag tag: tags){
             for (Filter<Tag> filter: filters){

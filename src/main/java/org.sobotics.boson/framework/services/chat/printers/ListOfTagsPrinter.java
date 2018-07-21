@@ -12,7 +12,7 @@ public class ListOfTagsPrinter implements PrinterService<List<Tag>>{
     }
 
     public String print(List<Tag> tags){
-        String s = "[ [Tagdor](https://chat.stackoverflow.com/transcript/message/43142452#43142452) ] New tags created in the past 6 hrs: ";
+        String s = "[ [Boson](https://git.io/vA9TM) ] New tags created: ";
         for (Tag tag: tags){
             s += "[tag:"+tag.getName()+"] ";
         }

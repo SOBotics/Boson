@@ -68,6 +68,9 @@ public abstract class ApiService {
     public List<Tag> getTags(String site, int page, int pageSize, Instant fromDate) throws IOException {
         return getTags(site, page, pageSize, fromDate, Instant.now(), Ordering.DESC, TagSorting.POPULAR, "");
     }
+    public List<Tag> getTags(String site, Instant fromDate) throws IOException {
+        return getTags(site, fromDate, Instant.now(), Ordering.DESC, TagSorting.POPULAR, "");
+    }
 
 
 }
