@@ -10,7 +10,7 @@ public class NewTagPrinter implements PrinterService<Tag>{
     }
 
     public String print(Tag tag){
-        String s = "[ [Tagdor](https://chat.stackoverflow.com/transcript/message/43142452#43142452) ] New tag " +
+        String s = "[ [Boson](https://git.io/vA9TM) ] New tag " +
                 "[tag:"+tag.getName()+"] ";
 
         s+="with "+tag.getCount()+" questions";

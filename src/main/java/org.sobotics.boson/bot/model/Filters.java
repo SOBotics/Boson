@@ -6,5 +6,6 @@ public enum Filters {
     USER_ID,
     POST_ID,
     CONTAINS,
-    TAG
+    TAG,
+    BURNED_TAG
 }

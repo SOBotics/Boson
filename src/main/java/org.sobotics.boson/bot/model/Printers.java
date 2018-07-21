@@ -1,5 +1,6 @@
 package org.sobotics.boson.bot.model;
 
 public enum Printers {
-    ONE_BOX
+    ONE_BOX,
+    LIST_TAGS
 }

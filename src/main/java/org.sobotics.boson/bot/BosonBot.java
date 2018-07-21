@@ -16,10 +16,7 @@ import org.sobotics.boson.framework.services.chat.filters.*;
 import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventListener;
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
 import org.sobotics.boson.framework.services.chat.monitors.*;
-import org.sobotics.boson.framework.services.chat.printers.ContentOneBoxPrinter;
-import org.sobotics.boson.framework.services.chat.printers.GenericContentPrinterService;
-import org.sobotics.boson.framework.services.chat.printers.ListOfTagsPrinter;
-import org.sobotics.boson.framework.services.chat.printers.PrinterService;
+import org.sobotics.boson.framework.services.chat.printers.*;
 import org.sobotics.chatexchange.chat.ChatHost;
 import org.sobotics.chatexchange.chat.Message;
 import org.sobotics.chatexchange.chat.Room;
@@ -194,13 +191,15 @@ public class BosonBot {
                 case posts:
                     return new GenericContentPrinterService<>(site);
                 case tags:
-                    return new ListOfTagsPrinter(site);
+                    return new NewTagPrinter(site);
             }
         }
 
         switch (printer){
             case ONE_BOX:
                 return new ContentOneBoxPrinter<>(chatRoom);
+            case LIST_TAGS:
+                return new ListOfTagsPrinter(site);
         }
 
         return new GenericContentPrinterService<>(site);
@@ -221,9 +220,12 @@ public class BosonBot {
                 case POST_ID:
                     return new PostIDFilter(Integer.parseInt(value));
                 case CONTAINS:
-                    return new BodyFilter(value);
+                    return new BodyFilter(value.replace("%20", " "));
                 case TAG:
                     return new TaggedFilter(value.split(";"));
+                case BURNED_TAG:
+                    return new BurnedTagFilter(value);
+
             }
 
         }

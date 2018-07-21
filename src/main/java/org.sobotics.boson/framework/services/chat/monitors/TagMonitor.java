@@ -17,7 +17,7 @@ public class TagMonitor extends Monitor<Tag, List<Tag>>{
 
     public TagMonitor(ChatRoom room, int frequency, String site, String apiKey, Filter<Tag>[] filters, PrinterService<List<Tag>> printer) {
         super(room, frequency, site, apiKey, filters, printer);
-        previousTime = Instant.now().minusSeconds(60*60*6);
+        previousTime = Instant.now().minusSeconds(frequency);
     }
 
     @Override
