@@ -17,7 +17,7 @@ public class BurnedTagFilter implements Filter<Tag> {
     public boolean filter(Tag data) {
 
 
-        String tagdorApi = "http://tagdor-tagdor.193b.starter-ca-central-1.openshiftapps.com/tags/";
+        String tagdorApi = "http://tagdor.sobotics.org/tags/";
 
         try {
             JsonObject json = HttpRequestUtils.get(tagdorApi+data.getName());
