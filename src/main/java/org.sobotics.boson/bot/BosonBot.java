@@ -17,6 +17,7 @@ import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventLis
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
 import org.sobotics.boson.framework.services.chat.monitors.*;
 import org.sobotics.boson.framework.services.chat.printers.*;
+import org.sobotics.boson.framework.services.others.HeatDetectorService;
 import org.sobotics.chatexchange.chat.ChatHost;
 import org.sobotics.chatexchange.chat.Message;
 import org.sobotics.chatexchange.chat.Room;
@@ -124,7 +125,7 @@ public class BosonBot {
             try {
                 if (requestedFilters!=null) {
                     for (int i = 0; i < requestedFilters.size(); i++) {
-                        filters.add(getFilterFromRequestedFilter(requestedFilters.get(i), requestedValues.get(i)));
+                        filters.add(getFilterFromRequestedFilter(requestedFilters.get(i), requestedValues.get(i), site));
                     }
                 }
                 else filters.add(new EmptyFilter());
@@ -206,7 +207,7 @@ public class BosonBot {
 
     }
 
-    private Filter getFilterFromRequestedFilter(FilterTypes filter, String value) throws  NumberFormatException{
+    private Filter getFilterFromRequestedFilter(FilterTypes filter, String value, String site) throws  NumberFormatException{
 
         if (filter!=null) {
 
@@ -225,7 +226,8 @@ public class BosonBot {
                     return new TaggedFilter(value.split(";"));
                 case BURNED_TAG:
                     return new BurnedTagFilter(value);
-
+                case HEAT_DETECTOR:
+                    return new HeatDetectorFilter(new HeatDetectorService(Integer.parseInt(value), "stackoverflow"));
             }
 
         }

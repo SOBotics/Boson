@@ -33,6 +33,8 @@ public class HeatDetectorService {
         request.setMinScore(limit);
         JsonObject returnData;
 
+        System.err.println(request);
+
         try {
             returnData = HttpRequestUtils.postJson(URL, new Gson().toJson(request));
         } catch (IOException e) {
@@ -40,12 +42,31 @@ public class HeatDetectorService {
             return  null;
         }
 
+        handleBackoff(returnData);
+
         HeatDetectorResponse response = new Gson().fromJson(returnData, HeatDetectorResponse.class);
 
         // TODO: Add Back off logic here
+
+        System.err.println(response);
 
         return response.getResult();
 
     }
 
+    public int getLimit() {
+        return limit;
+    }
+
+    private void handleBackoff(JsonObject root) {
+        if (root.has("backOff")) {
+            int backoff = root.get("backOff").getAsInt();
+            System.out.println("Backing off for " + backoff+ " seconds");
+            try {
+                Thread.sleep(1000 * backoff);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

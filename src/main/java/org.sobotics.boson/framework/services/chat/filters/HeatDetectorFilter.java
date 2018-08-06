@@ -20,6 +20,11 @@ public class HeatDetectorFilter extends SpecialFilter<Comment> {
         this.service = service;
         this.results = new ArrayList<>();
     }
+    public HeatDetectorFilter(HeatDetectorService service) {
+        this.value = service.getLimit();
+        this.service = service;
+        this.results = new ArrayList<>();
+    }
 
     @Override
     public String getMessage() {

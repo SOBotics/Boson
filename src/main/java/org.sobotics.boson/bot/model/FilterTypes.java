@@ -7,5 +7,6 @@ public enum FilterTypes {
     POST_ID,
     CONTAINS,
     TAG,
-    BURNED_TAG
+    BURNED_TAG,
+    HEAT_DETECTOR
 }
