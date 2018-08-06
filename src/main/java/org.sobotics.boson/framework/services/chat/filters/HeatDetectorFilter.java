@@ -27,7 +27,7 @@ public class HeatDetectorFilter extends SpecialFilter<Comment> {
     }
 
     @Override
-    public String getMessage() {
+    public List<String> getMessage() {
         return null;
     }
 

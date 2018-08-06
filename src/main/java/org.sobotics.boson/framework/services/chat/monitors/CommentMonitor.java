@@ -3,7 +3,9 @@ package org.sobotics.boson.framework.services.chat.monitors;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
+import org.sobotics.boson.framework.services.chat.filters.SpecialFilter;
 import org.sobotics.boson.framework.services.chat.printers.PrinterService;
+import org.sobotics.boson.framework.services.chat.printers.SpecialPrinterService;
 import org.sobotics.boson.framework.services.data.ApiService;
 
 import java.io.IOException;
@@ -24,10 +26,14 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
     protected void monitor(ChatRoom room, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer, ApiService apiService) throws IOException {
 
         List<Comment> display = apiService.getComments(site, 1, 100, previousTime);
+        List<String> messages = new ArrayList<>();
 
         for (Filter<Comment> filter: filters){
 
             List<Boolean> filterResult = filter.filterAll(display);
+            if (filter instanceof SpecialFilter){
+                messages = ((SpecialFilter) filter).getMessage();
+            }
             List<Comment> tempDisplay = new ArrayList<>();
 
             for(int i = 0; i< filterResult.size(); i++){
@@ -37,12 +43,18 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
                     tempDisplay.add(comment);
                 }
             }
-
             display = tempDisplay;
         }
 
         for(Comment comment: display){
-            room.getRoom().send(printer.print(comment));
+            if(printer instanceof SpecialPrinterService) {
+                SpecialPrinterService specialPrinter = (SpecialPrinterService) printer;
+                specialPrinter.print(comment, "some message here");
+                // TODO: Add a way to send messages here
+            }
+            else {
+                room.getRoom().send(printer.print(comment));
+            }
         }
 
         previousTime = Instant.now();
