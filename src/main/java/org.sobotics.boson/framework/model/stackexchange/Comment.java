@@ -11,7 +11,7 @@ public class Comment implements Content{
     private boolean edited;
     private String link;
     private ShallowUser owner;
-    private int postId;
+    private long postId;
     private String postType;
     private ShallowUser replyToUser;
     private int score;
@@ -98,11 +98,11 @@ public class Comment implements Content{
         this.owner = owner;
     }
 
-    public int getPostId() {
+    public long getPostId() {
         return postId;
     }
 
-    public void setPostId(int postId) {
+    public void setPostId(long postId) {
         this.postId = postId;
     }
 
