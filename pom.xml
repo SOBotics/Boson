@@ -37,17 +37,12 @@
             <artifactId>argparse4j</artifactId>
             <version>0.8.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.11.2</version>
+        </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>Tunaki-mvn-repo</id>
-            <url>https://raw.github.com/Tunaki/chatexchange/mvn-repo/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
     <build>
         <plugins>
             <plugin>
