@@ -22,9 +22,8 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
 
     @Override
     protected void monitor(ChatRoom room, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer, ApiService apiService) throws IOException {
-        List<Comment> comments = apiService.getComments(site, 1, 100, previousTime);
 
-        List<Comment> display = comments;
+        List<Comment> display = apiService.getComments(site, 1, 100, previousTime);
 
         for (Filter<Comment> filter: filters){
 
