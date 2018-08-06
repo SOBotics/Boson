@@ -113,7 +113,7 @@ public class BosonBot {
             int frequency = res.getInt("frequency");
             Integer otherRoomId = res.getInt("room");
             ChatHost otherHost = res.get("host");
-            List<Filters> requestedFilters = res.get("filter");
+            List<FilterTypes> requestedFilters = res.get("filter");
             List<String> requestedValues = res.get("value");
             String ID = res.get("name");
             if (bots.containsKey(ID)) {
@@ -179,7 +179,7 @@ public class BosonBot {
 
     private PrinterService getPrinterServiceFromPrinter(Namespace res, ChatRoom chatRoom) {
 
-        Printers printer = res.get("printer");
+        PrinterTypes printer = res.get("printer");
         Type type = res.get("type");
         String site = res.getString("site");
 
@@ -206,7 +206,7 @@ public class BosonBot {
 
     }
 
-    private Filter getFilterFromRequestedFilter(Filters filter, String value) throws  NumberFormatException{
+    private Filter getFilterFromRequestedFilter(FilterTypes filter, String value) throws  NumberFormatException{
 
         if (filter!=null) {
 
@@ -301,7 +301,7 @@ public class BosonBot {
                 .help("Frequency of the tracker in seconds");
 
 
-        parser.addArgument("-f", "--filter").type(Filters.class).nargs("*")
+        parser.addArgument("-f", "--filter").type(FilterTypes.class).nargs("*")
                 .help("Set the filters used by the bot");
 
         parser.addArgument("-h", "--help").action(new BosonHelpArgumentAction())
@@ -310,7 +310,7 @@ public class BosonBot {
         parser.addArgument("-n", "--name").type(String.class).nargs("?")
                 .help("Give a name to your bot (we will generate a 10 digit value, if you don't)");
 
-        parser.addArgument("-p", "--printer").type(Printers.class).nargs("?")
+        parser.addArgument("-p", "--printer").type(PrinterTypes.class).nargs("?")
                 .help("Set the printer to be used by the bot");
 
         parser.addArgument("-r", "--room").type(Integer.class).nargs("?")

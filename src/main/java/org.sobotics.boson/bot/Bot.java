@@ -1,7 +1,7 @@
 package org.sobotics.boson.bot;
 
-import org.sobotics.boson.bot.model.Filters;
-import org.sobotics.boson.bot.model.Printers;
+import org.sobotics.boson.bot.model.FilterTypes;
+import org.sobotics.boson.bot.model.PrinterTypes;
 import org.sobotics.boson.bot.model.Type;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.services.chat.ChatRoomService;
@@ -16,8 +16,8 @@ public class Bot {
     private String creationMessageUrl;
 
     private Type type;
-    private List<Filters> filtersList;
-    private Printers printer;
+    private List<FilterTypes> filterTypes;
+    private PrinterTypes printer;
     private String siteName;
     private Integer frequency;
     private Integer chatRoomId;
@@ -25,7 +25,7 @@ public class Bot {
 
 
     public Bot(String identifier, ChatRoom chatRoom, ChatRoomService chatRoomService, Type type,
-               List<Filters> filtersList, Printers printer, Integer frequency, String creationMessageUrl) {
+               List<FilterTypes> filterTypes, PrinterTypes printer, Integer frequency, String creationMessageUrl) {
         this.identifier = identifier;
         this.chatRoom = chatRoom;
         this.chatRoomService = chatRoomService;
@@ -33,7 +33,7 @@ public class Bot {
 
 
         this.type = type;
-        this.filtersList = filtersList;
+        this.filterTypes = filterTypes;
         this.printer = printer;
         this.frequency = frequency;
 
@@ -79,19 +79,19 @@ public class Bot {
         this.type = type;
     }
 
-    public List<Filters> getFiltersList() {
-        return filtersList;
+    public List<FilterTypes> getFilterTypes() {
+        return filterTypes;
     }
 
-    public void setFiltersList(List<Filters> filtersList) {
-        this.filtersList = filtersList;
+    public void setFilterTypes(List<FilterTypes> filterTypes) {
+        this.filterTypes = filterTypes;
     }
 
-    public Printers getPrinter() {
+    public PrinterTypes getPrinter() {
         return printer;
     }
 
-    public void setPrinter(Printers printer) {
+    public void setPrinter(PrinterTypes printer) {
         this.printer = printer;
     }
 

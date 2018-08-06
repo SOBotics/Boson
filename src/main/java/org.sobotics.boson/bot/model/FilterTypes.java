@@ -1,6 +1,6 @@
 package org.sobotics.boson.bot.model;
 
-public enum Filters {
+public enum FilterTypes {
     REPUTATION,
     LENGTH,
     USER_ID,
