@@ -6,7 +6,7 @@ import org.sobotics.boson.framework.utils.HttpRequestUtils;
 
 import java.io.IOException;
 
-public class BurnedTagFilter implements Filter<Tag> {
+public class BurnedTagFilter extends Filter<Tag> {
     private String name;
 
     public BurnedTagFilter(String name){

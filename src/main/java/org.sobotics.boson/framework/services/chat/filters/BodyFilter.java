@@ -2,7 +2,7 @@ package org.sobotics.boson.framework.services.chat.filters;
 
 import org.sobotics.boson.framework.model.stackexchange.Content;
 
-public class BodyFilter implements Filter<Content> {
+public class BodyFilter extends Filter<Content> {
     private String keyword;
 
     public BodyFilter(String keyword){

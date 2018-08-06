@@ -2,7 +2,7 @@ package org.sobotics.boson.framework.services.chat.filters;
 
 import org.sobotics.boson.framework.model.stackexchange.Content;
 
-public class LengthFilter implements Filter<Content> {
+public class LengthFilter extends Filter<Content> {
     private int length;
 
     public LengthFilter(int length){

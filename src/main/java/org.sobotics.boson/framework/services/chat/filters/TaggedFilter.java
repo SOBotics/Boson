@@ -4,7 +4,7 @@ import org.sobotics.boson.framework.model.stackexchange.Question;
 
 import java.util.Arrays;
 
-public class TaggedFilter implements Filter<Question> {
+public class TaggedFilter extends Filter<Question> {
     private String [] tags;
 
     public TaggedFilter(String [] tags){

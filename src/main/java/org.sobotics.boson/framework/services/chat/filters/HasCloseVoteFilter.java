@@ -3,7 +3,7 @@ package org.sobotics.boson.framework.services.chat.filters;
 import org.sobotics.boson.framework.model.stackexchange.Question;
 
 
-public class HasCloseVoteFilter implements Filter<Question> {
+public class HasCloseVoteFilter extends Filter<Question> {
 
     private int voteCount;
 

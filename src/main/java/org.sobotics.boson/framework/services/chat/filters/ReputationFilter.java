@@ -2,7 +2,7 @@ package org.sobotics.boson.framework.services.chat.filters;
 
 import org.sobotics.boson.framework.model.stackexchange.Content;
 
-public class ReputationFilter implements Filter<Content> {
+public class ReputationFilter extends Filter<Content> {
     private int reputation;
 
     public ReputationFilter(int reputation){
