@@ -61,9 +61,9 @@ public class HeatDetectorService {
     private void handleBackoff(JsonObject root) {
         if (root.has("backOff")) {
             int backoff = root.get("backOff").getAsInt();
-            System.out.println("Backing off for " + backoff+ " seconds");
+            //System.out.println("Backing off for " + backoff+ " milliseconds");
             try {
-                Thread.sleep(1000 * backoff);
+                Thread.sleep(backoff);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
