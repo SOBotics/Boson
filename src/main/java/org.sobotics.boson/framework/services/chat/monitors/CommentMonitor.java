@@ -8,6 +8,7 @@ import org.sobotics.boson.framework.services.data.ApiService;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommentMonitor extends Monitor<Comment, Comment>{
@@ -22,13 +23,29 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
     @Override
     protected void monitor(ChatRoom room, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer, ApiService apiService) throws IOException {
         List<Comment> comments = apiService.getComments(site, 1, 100, previousTime);
-        for (Comment comment: comments){
-            for (Filter<Comment> filter: filters){
-                if(filter.filter(comment)){
-                    room.getRoom().send(printer.print(comment));
+
+        List<Comment> display = comments;
+
+        for (Filter<Comment> filter: filters){
+
+            List<Boolean> filterResult = filter.filterAll(display);
+            List<Comment> tempDisplay = new ArrayList<>();
+
+            for(int i = 0; i< filterResult.size(); i++){
+                boolean result = filterResult.get(i);
+                Comment comment = display.get(i);
+                if(result){
+                    tempDisplay.add(comment);
                 }
             }
+
+            display = tempDisplay;
         }
+
+        for(Comment comment: display){
+            room.getRoom().send(printer.print(comment));
+        }
+
         previousTime = Instant.now();
     }
 }
