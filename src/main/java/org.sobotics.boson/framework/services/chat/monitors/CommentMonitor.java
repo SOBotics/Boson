@@ -11,7 +11,9 @@ import org.sobotics.boson.framework.services.data.ApiService;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommentMonitor extends Monitor<Comment, Comment>{
 
@@ -26,13 +28,13 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
     protected void monitor(ChatRoom room, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer, ApiService apiService) throws IOException {
 
         List<Comment> display = apiService.getComments(site, 1, 100, previousTime);
-        List<String> messages = new ArrayList<>();
+        Map messages = new HashMap<Long, String>();
 
         for (Filter<Comment> filter: filters){
 
             List<Boolean> filterResult = filter.filterAll(display);
             if (filter instanceof SpecialFilter){
-                messages = ((SpecialFilter) filter).getMessage();
+                messages = ((SpecialFilter) filter).getMessages();
             }
             List<Comment> tempDisplay = new ArrayList<>();
 
@@ -49,8 +51,7 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
         for(Comment comment: display){
             if(printer instanceof SpecialPrinterService) {
                 SpecialPrinterService specialPrinter = (SpecialPrinterService) printer;
-                specialPrinter.print(comment, "some message here");
-                // TODO: Add a way to send messages here
+                room.getRoom().send(specialPrinter.print(comment, (String) messages.get(comment.getCommentId())));
             }
             else {
                 room.getRoom().send(printer.print(comment));

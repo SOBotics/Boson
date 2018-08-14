@@ -6,7 +6,7 @@ public class Comment implements Content{
     private String body;
     private String bodyMarkdown;
     private boolean canFlag;
-    private int commentId;
+    private long commentId;
     private Instant creationDate;
     private boolean edited;
     private String link;
@@ -58,11 +58,11 @@ public class Comment implements Content{
         this.canFlag = canFlag;
     }
 
-    public int getCommentId() {
+    public long getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(int commentId) {
+    public void setCommentId(long commentId) {
         this.commentId = commentId;
     }
 

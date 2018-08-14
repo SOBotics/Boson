@@ -201,6 +201,8 @@ public class BosonBot {
                 return new ContentOneBoxPrinter<>(chatRoom);
             case LIST_TAGS:
                 return new ListOfTagsPrinter(site);
+            case HEAT_DETECTOR:
+                return new HeatDetectorPrinter(chatRoom);
         }
 
         return new GenericContentPrinterService<>(site);
