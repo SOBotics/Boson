@@ -40,7 +40,7 @@ public class HeatDetectorFilter extends SpecialFilter<Comment> {
     public boolean filter(Comment data) {
 
         List<Content> contentList = new ArrayList<>();
-        contentList.add(new Content(data.getCommentId(), data.getBodyMarkdown()));
+        contentList.add(new Content(data.getCommentId(), data.getBody()));
 
         results = service.getHeatDetectorData(contentList);
         if (results.size()>0){
@@ -59,7 +59,7 @@ public class HeatDetectorFilter extends SpecialFilter<Comment> {
 
         for (Comment data: dataList){
             ids.add(data.getCommentId());
-            contentList.add(new Content(data.getCommentId(), data.getBodyMarkdown()));
+            contentList.add(new Content(data.getCommentId(), data.getBody()));
         }
 
         results = service.getHeatDetectorData(contentList);
