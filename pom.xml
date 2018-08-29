@@ -6,7 +6,7 @@
 
     <groupId>org.sobotics</groupId>
     <artifactId>boson</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>Boson</name>
     <description>A generic framework for creating SOBotics bots</description>
 
@@ -49,8 +49,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.10</source>
+                    <target>1.10</target>
                 </configuration>
             </plugin>
             <plugin>
