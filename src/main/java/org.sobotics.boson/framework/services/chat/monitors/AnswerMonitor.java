@@ -14,13 +14,13 @@ public class AnswerMonitor extends Monitor<Answer, Answer>{
 
     private Instant previousTime;
 
-    public AnswerMonitor(ChatRoom room, int frequency, String site, String apiKey, Filter<Answer>[] filters, PrinterService<Answer> printer) {
-        super(room, frequency, site, apiKey, filters, printer);
+    public AnswerMonitor(ChatRoom room, int frequency, String site, String apiKey, String apiToken, Filter<Answer>[] filters, PrinterService<Answer> printer) {
+        super(room, frequency, site, apiKey, filters, printer, apiToken);
         previousTime = Instant.now().minusSeconds(60);
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Answer>[] filters, PrinterService<Answer> printer, ApiService apiService) throws IOException {
+    protected void monitor(ChatRoom room, String site, Filter<Answer>[] filters, PrinterService<Answer> printer, ApiService apiService) throws IOException {
         List<Answer> answers = apiService.getAnswers(site, 1, 100, previousTime);
         for (Answer answer: answers){
             for (Filter<Answer> filter: filters){

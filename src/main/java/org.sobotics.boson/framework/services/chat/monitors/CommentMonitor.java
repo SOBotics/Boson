@@ -19,13 +19,13 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
 
     private Instant previousTime;
 
-    public CommentMonitor(ChatRoom room, int frequency, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer) {
-        super(room, frequency, site, apiKey, filters, printer);
+    public CommentMonitor(ChatRoom room, int frequency, String site, String apiKey, String apiToken, Filter<Comment>[] filters, PrinterService<Comment> printer) {
+        super(room, frequency, site, apiKey, filters, printer, apiToken);
         previousTime = Instant.now().minusSeconds(frequency);
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Comment>[] filters, PrinterService<Comment> printer, ApiService apiService) throws IOException {
+    protected void monitor(ChatRoom room, String site, Filter<Comment>[] filters, PrinterService<Comment> printer, ApiService apiService) throws IOException {
 
         List<Comment> display = apiService.getComments(site, 1, 100, previousTime);
         Map messages = new HashMap<Long, String>();

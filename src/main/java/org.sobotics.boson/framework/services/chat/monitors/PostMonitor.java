@@ -14,13 +14,13 @@ public class PostMonitor extends Monitor<Post, Post>{
 
     private Instant previousTime;
 
-    public PostMonitor(ChatRoom room, int frequency, String site, String apiKey, Filter<Post>[] filters, PrinterService<Post> printer) {
-        super(room, frequency, site, apiKey, filters, printer);
+    public PostMonitor(ChatRoom room, int frequency, String site, String apiKey, String apiToken, Filter<Post>[] filters, PrinterService<Post> printer) {
+        super(room, frequency, site, apiKey, filters, printer, apiToken);
         previousTime = Instant.now().minusSeconds(60);
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Post>[] filters, PrinterService<Post> printer, ApiService apiService) throws IOException {
+    protected void monitor(ChatRoom room, String site, Filter<Post>[] filters, PrinterService<Post> printer, ApiService apiService) throws IOException {
         List<Post> posts = apiService.getPostsByCreation(site, previousTime);
         for (Post post: posts){
             for (Filter<Post> filter: filters){

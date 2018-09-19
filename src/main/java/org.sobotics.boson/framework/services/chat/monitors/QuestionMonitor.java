@@ -16,13 +16,13 @@ public class QuestionMonitor extends Monitor<Question, Question>{
 
     private Instant previousLastActivityDate;
 
-    public QuestionMonitor(ChatRoom room, int frequency, String site, String apiKey, Filter<Question>[] filters, PrinterService<Question> printer) {
-        super(room, frequency, site, apiKey, filters, printer);
+    public QuestionMonitor(ChatRoom room, int frequency, String site, String apiKey, String apiToken, Filter<Question>[] filters, PrinterService<Question> printer) {
+        super(room, frequency, site, apiKey, filters, printer, apiToken);
         previousLastActivityDate = Instant.now().minusSeconds(60);
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, String apiKey, Filter<Question>[] filters, PrinterService<Question> printer, ApiService apiService) throws IOException {
+    protected void monitor(ChatRoom room, String site, Filter<Question>[] filters, PrinterService<Question> printer, ApiService apiService) throws IOException {
         List<Question> questions;
         try {
             questions = apiService.getQuestions(site, 1, 100, null);

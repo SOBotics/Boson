@@ -17,17 +17,19 @@ public abstract class Monitor <T,U>{
     private int frequency;
     private String site;
     private String apiKey;
+    private String apiToken;
     private Filter<T> filters[];
     private PrinterService<U> printer;
     private ScheduledExecutorService service;
     private ApiService apiService;
 
-    public Monitor(ChatRoom room, int frequency, String site, String apiKey, Filter<T>[] filters, PrinterService<U> printer) {
+    public Monitor(ChatRoom room, int frequency, String site, String apiKey, Filter<T>[] filters, PrinterService<U> printer, String apiToken) {
         this.room = room;
         this.frequency = frequency;
         this.site = site;
         this.filters = filters;
         this.apiKey = apiKey;
+        this.apiToken = apiToken;
         this.printer = printer;
         this.service = Executors.newSingleThreadScheduledExecutor();
         this.apiService = new StackExchangeApiService(apiKey);
@@ -46,7 +48,7 @@ public abstract class Monitor <T,U>{
     public ScheduledExecutorService startMonitor(){
         Runnable runnable = () -> {
             try {
-                monitor(room, site, apiKey, filters, printer, apiService);
+                monitor(room, site, filters, printer, apiService);
             } catch (IOException e) {
                 e.printStackTrace();
                 room.getRoom().send("Error while calling API: `"+ e.getMessage()+"`");
@@ -60,5 +62,5 @@ public abstract class Monitor <T,U>{
         service.shutdown();
     }
 
-    protected abstract void monitor(ChatRoom room, String site, String apiKey, Filter<T>[] filters, PrinterService<U> printer, ApiService apiService) throws IOException;
+    protected abstract void monitor(ChatRoom room, String site, Filter<T>[] filters, PrinterService<U> printer, ApiService apiService) throws IOException;
 }

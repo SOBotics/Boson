@@ -10,10 +10,14 @@ public class Boson{
 
     public static void main(String[] args) {
         PropertyService  propertyService = new PropertyService();
-        StackExchangeClient client = new StackExchangeClient(propertyService.getProperty("email"), propertyService.getProperty("password"));
+        String email = propertyService.getProperty("email");
+        String password = propertyService.getProperty("password");
+        String apiKey = propertyService.getProperty("apikey");
+        String apiToken = propertyService.getProperty("apitoken");
+        StackExchangeClient client = new StackExchangeClient(email, password);
         Room room = client.joinRoom(ChatHost.STACK_OVERFLOW, 167908);
 
-        new BosonBot(room, client).start();
+        new BosonBot(room, client, apiKey, apiToken).start();
 
         //new PostPrinterBot(room, "stackoverflow", 10000000).start();
 

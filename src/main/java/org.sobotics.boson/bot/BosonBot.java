@@ -36,11 +36,15 @@ public class BosonBot {
     private Room room;
     private StackExchangeClient client;
     private Map<String, Bot> bots;
+    private String apiKey;
+    private String apiToken;
 
-    public BosonBot(Room room, StackExchangeClient client) {
+    public BosonBot(Room room, StackExchangeClient client, String apiKey, String apiToken) {
         this.room = room;
         this.client = client;
         this.bots = new HashMap<>();
+        this.apiKey = apiKey;
+        this.apiToken = apiToken;
     }
 
     public void start(){
@@ -150,7 +154,7 @@ public class BosonBot {
                     +"]("+ room.getHost().getBaseUrl()+"/rooms/"+room.getRoomId()+")");
 
             PrinterService printerService = getPrinterServiceFromPrinter(res, chatRoom);
-            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters.toArray(new Filter[filters.size()]), printerService);
+            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters.toArray(new Filter[0]), printerService);
             if(monitors==null) {
                 room.send("The only types supported are questions, answers and tags");
             }
@@ -249,19 +253,17 @@ public class BosonBot {
     private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom, Filter[] filters,
                                   PrinterService printerService) {
 
-        String apiKey = "HYWHTHpYImfSRnhkArqu8Q((";
-
         switch (posttype) {
             case questions:
-                return new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
+                return new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
             case answers:
-                return new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
+                return new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
             case comments:
-                return new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
+                return new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
             case posts:
-                return new Monitor[]{new PostMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
+                return new Monitor[]{new PostMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
             case tags:
-                return new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, filters, printerService)};
+                return new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
         }
         return null;
     }
