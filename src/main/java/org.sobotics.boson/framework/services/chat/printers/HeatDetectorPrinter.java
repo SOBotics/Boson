@@ -14,7 +14,7 @@ public class HeatDetectorPrinter extends SpecialPrinterService<Comment> {
     @Override
     public String print(Comment comment, String dashboard, String intro, String message) {
         String display_message = "New heated comment: " + message;
-        chatRoom.getRoom().send(getFinalPrintString(dashboard, intro, display_message));
+        chatRoom.getRoom().send(getFinalPrintString(dashboard, getGenericIntro(), display_message));
         return print(comment, dashboard, intro);
     }
 
