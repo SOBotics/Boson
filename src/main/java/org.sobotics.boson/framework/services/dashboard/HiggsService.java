@@ -23,13 +23,16 @@ public class HiggsService implements DashboardService<Content> {
     private String url;
     private String api_url;
     private String key;
+    private String botName;
     private BotApi botApi;
 
 
-    public HiggsService(String url, String api_url, String key) throws ApiException {
+
+    public HiggsService(String url, String api_url, String key, String botName) throws ApiException {
         this.url = url;
         this.api_url = api_url;
         this.key = key;
+        this.botName = botName;
         initialize();
     }
 
@@ -43,25 +46,25 @@ public class HiggsService implements DashboardService<Content> {
     }
 
     @Override
-    public String createReport(Content content, String botName) throws ApiException {
+    public String createReport(Content content) throws ApiException {
 
         if (content instanceof Question)
-            return  addNewQuestion((Question) content, botName);
+            return  addNewQuestion((Question) content);
         if (content instanceof Answer)
-            return  addNewAnswer((Answer) content, botName);
+            return  addNewAnswer((Answer) content);
         if (content instanceof Comment)
-            return  addNewComment((Comment) content, botName);
+            return  addNewComment((Comment) content);
         if (content instanceof Post)
-            return  addNewPost((Post) content, botName);
+            return  addNewPost((Post) content);
 
         return null;
     }
 
-    private String addNewPost(Post content, String botName) {
+    private String addNewPost(Post content) {
         return null;
     }
 
-    private String addNewComment(Comment comment, String botName) throws ApiException {
+    private String addNewComment(Comment comment) throws ApiException {
 
         RegisterPostRequest rpr = new RegisterPostRequest();
         rpr.authorName(comment.getOwner().getDisplayName());
@@ -106,11 +109,11 @@ public class HiggsService implements DashboardService<Content> {
         return url+"/"+higgsId;
     }
 
-    private String addNewAnswer(Answer content, String botName) {
+    private String addNewAnswer(Answer content) {
         return null;
     }
 
-    private String addNewQuestion(Question question, String botName) {
+    private String addNewQuestion(Question question) {
         return null;
     }
 
