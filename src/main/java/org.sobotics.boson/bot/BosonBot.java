@@ -1,6 +1,7 @@
 package org.sobotics.boson.bot;
 
 
+import io.swagger.client.ApiException;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -17,6 +18,8 @@ import org.sobotics.boson.framework.services.chat.listeners.MessageReplyEventLis
 import org.sobotics.boson.framework.services.chat.listeners.UserMentionedListener;
 import org.sobotics.boson.framework.services.chat.monitors.*;
 import org.sobotics.boson.framework.services.chat.printers.*;
+import org.sobotics.boson.framework.services.dashboard.DashboardService;
+import org.sobotics.boson.framework.services.dashboard.HiggsService;
 import org.sobotics.boson.framework.services.others.HeatDetectorService;
 import org.sobotics.chatexchange.chat.ChatHost;
 import org.sobotics.chatexchange.chat.Message;
@@ -38,6 +41,10 @@ public class BosonBot {
     private Map<String, Bot> bots;
     private String apiKey;
     private String apiToken;
+    private String dashboardUrl;
+    private String dashboardApi;
+    private String dashboardKey;
+
 
     public BosonBot(Room room, StackExchangeClient client, String apiKey, String apiToken) {
         this.room = room;
@@ -45,6 +52,18 @@ public class BosonBot {
         this.bots = new HashMap<>();
         this.apiKey = apiKey;
         this.apiToken = apiToken;
+    }
+
+    public BosonBot(Room room, StackExchangeClient client, String apiKey, String apiToken,
+                    String dashboardUrl, String dashboardApi, String dashboardKey) {
+        this.room = room;
+        this.client = client;
+        this.bots = new HashMap<>();
+        this.apiKey = apiKey;
+        this.apiToken = apiToken;
+        this.dashboardUrl = dashboardUrl;
+        this.dashboardApi = dashboardApi;
+        this.dashboardKey = dashboardKey;
     }
 
     public void start(){
@@ -154,6 +173,12 @@ public class BosonBot {
                     +"]("+ room.getHost().getBaseUrl()+"/rooms/"+room.getRoomId()+")");
 
             PrinterService printerService = getPrinterServiceFromPrinter(res, chatRoom);
+            try {
+                DashboardService dashboardService = getDashboardService(res);
+            }
+            catch (ApiException e){
+                DashboardService dashboardService = null;
+            }
             Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters.toArray(new Filter[0]), printerService);
             if(monitors==null) {
                 room.send("The only types supported are questions, answers and tags");
@@ -179,6 +204,19 @@ public class BosonBot {
         }
         catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private DashboardService getDashboardService(Namespace res) throws ApiException {
+        DashboardTypes dashboard = res.get("dash");
+        if (dashboard==null) {
+            return null;
+        }
+        else {
+            switch (dashboard) {
+                case HIGGS: return new HiggsService(dashboardUrl, dashboardApi, dashboardKey);
+                default: return null;
+            }
         }
     }
 
@@ -306,6 +344,9 @@ public class BosonBot {
         parser.addArgument("frequency").type(Integer.class)
                 .help("Frequency of the tracker in seconds");
 
+
+        parser.addArgument("-d", "--dash").type(DashboardTypes.class).nargs("?")
+                .help("Set the dashboard to be used by the bot");
 
         parser.addArgument("-f", "--filter").type(FilterTypes.class).nargs("*")
                 .help("Set the filters used by the bot");
