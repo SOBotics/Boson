@@ -6,7 +6,7 @@
 
     <groupId>org.sobotics</groupId>
     <artifactId>boson</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <name>Boson</name>
     <description>A generic framework for creating SOBotics bots</description>
 

@@ -14,10 +14,13 @@ public class Boson{
         String password = propertyService.getProperty("password");
         String apiKey = propertyService.getProperty("apikey");
         String apiToken = propertyService.getProperty("apitoken");
+        String dashUrl = propertyService.getProperty("higgsurl");
+        String dashApi = propertyService.getProperty("higgsapi");
+        String dashKey = propertyService.getProperty("higgskey");
         StackExchangeClient client = new StackExchangeClient(email, password);
         Room room = client.joinRoom(ChatHost.STACK_OVERFLOW, 167908);
 
-        new BosonBot(room, client, apiKey, apiToken).start();
+        new BosonBot(room, client, apiKey, apiToken, dashUrl, dashApi, dashKey).start();
 
         //new PostPrinterBot(room, "stackoverflow", 10000000).start();
 
