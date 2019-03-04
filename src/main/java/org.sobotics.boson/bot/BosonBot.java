@@ -140,6 +140,8 @@ public class BosonBot {
             List<FilterTypes> requestedFilters = res.get("filter");
             List<String> requestedValues = res.get("value");
             String ID = res.get("name");
+            if (ID==null)
+                ID = getUniqueId();
             if (bots.containsKey(ID)) {
                 room.send("There is already another bot with the same name. Please create a unique name for your bot");
                 return;
@@ -187,8 +189,6 @@ public class BosonBot {
             }
             else {
                 ChatRoomService service;
-                if (ID==null)
-                    ID = getUniqueId();
                 service = new ChatRoomService(chatRoom, monitors);
                 String similarRoom;
                 similarRoom = findChatRoomByRoomId(chatRoom.getRoomId());
