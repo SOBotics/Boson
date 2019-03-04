@@ -60,12 +60,23 @@ public class HiggsService implements DashboardService<Content> {
         return null;
     }
 
-    private String addNewPost(Post content) {
-        return null;
+    private String addNewPost(Post post) throws ApiException {
+        RegisterPostRequest rpr = new RegisterPostRequest();
+        rpr.authorName(post.getOwner().getDisplayName());
+        rpr.authorReputation(post.getOwner().getReputation());
+        rpr.setTitle(post.getTitle());
+        rpr.setContentId((long)post.getPostId());
+        rpr.setContent(Jsoup.parse(post.getBody()).text());
+        rpr.setContentSite(post.getLink().split("/")[2]);
+        rpr.setContentType("answer");
+        rpr.setContentUrl(post.getLink());
+        rpr.setDetectionScore(1.0);
+        Instant cDate = Instant.ofEpochSecond(post.getCreationDate().getEpochSecond());
+        rpr.setContentCreationDate(org.threeten.bp.OffsetDateTime.ofInstant(cDate, ZoneOffset.UTC));
+        return addHiggs(rpr);
     }
 
     private String addNewComment(Comment comment) throws ApiException {
-
         RegisterPostRequest rpr = new RegisterPostRequest();
         rpr.authorName(comment.getOwner().getDisplayName());
         rpr.authorReputation(comment.getOwner().getReputation());
@@ -88,12 +99,46 @@ public class HiggsService implements DashboardService<Content> {
         rpr.setContentType("comment");
         rpr.setContentUrl(comment.getLink());
         rpr.setDetectionScore(1.0);
-
-        Instant detected = Instant.ofEpochSecond(System.currentTimeMillis()/1000);
-        rpr.setDetectedDate(OffsetDateTime.ofInstant(detected, ZoneId.systemDefault()));
-
         Instant cDate = Instant.ofEpochSecond(comment.getCreationDate().getEpochSecond());
         rpr.setContentCreationDate(org.threeten.bp.OffsetDateTime.ofInstant(cDate, ZoneOffset.UTC));
+        return addHiggs(rpr);
+    }
+
+    private String addNewAnswer(Answer answer) throws ApiException {
+        RegisterPostRequest rpr = new RegisterPostRequest();
+        rpr.authorName(answer.getOwner().getDisplayName());
+        rpr.authorReputation(answer.getOwner().getReputation());
+        rpr.setTitle(answer.getTitle());
+        rpr.setContentId((long)answer.getAnswerId());
+        rpr.setContent(Jsoup.parse(answer.getBody()).text());
+        rpr.setContentSite(answer.getLink().split("/")[2]);
+        rpr.setContentType("answer");
+        rpr.setContentUrl(answer.getLink());
+        rpr.setDetectionScore(1.0);
+        Instant cDate = Instant.ofEpochSecond(answer.getCreationDate().getEpochSecond());
+        rpr.setContentCreationDate(org.threeten.bp.OffsetDateTime.ofInstant(cDate, ZoneOffset.UTC));
+        return addHiggs(rpr);
+    }
+
+    private String addNewQuestion(Question question) throws ApiException {
+        RegisterPostRequest rpr = new RegisterPostRequest();
+        rpr.authorName(question.getOwner().getDisplayName());
+        rpr.authorReputation(question.getOwner().getReputation());
+        rpr.setTitle(question.getTitle());
+        rpr.setContentId((long)question.getQuestionId());
+        rpr.setContent(Jsoup.parse(question.getBody()).text());
+        rpr.setContentSite(question.getLink().split("/")[2]);
+        rpr.setContentType("answer");
+        rpr.setContentUrl(question.getLink());
+        rpr.setDetectionScore(1.0);
+        Instant cDate = Instant.ofEpochSecond(question.getCreationDate().getEpochSecond());
+        rpr.setContentCreationDate(org.threeten.bp.OffsetDateTime.ofInstant(cDate, ZoneOffset.UTC));
+        return addHiggs(rpr);
+    }
+
+    private String addHiggs(RegisterPostRequest rpr) throws ApiException {
+        Instant detected = Instant.ofEpochSecond(System.currentTimeMillis() / 1000);
+        rpr.setDetectedDate(OffsetDateTime.ofInstant(detected, ZoneId.systemDefault()));
 
         List<RegisterPostReason> reasons = new ArrayList<>();
         RegisterPostReason reason = new RegisterPostReason();
@@ -106,15 +151,7 @@ public class HiggsService implements DashboardService<Content> {
 
         Integer higgsId = botApi.botRegisterPostPost(rpr);
 
-        return url+"/"+higgsId;
-    }
-
-    private String addNewAnswer(Answer content) {
-        return null;
-    }
-
-    private String addNewQuestion(Question question) {
-        return null;
+        return "[Higgs](" + url + "/" + higgsId + ")";
     }
 
 }
