@@ -173,13 +173,15 @@ public class BosonBot {
                     +"]("+ room.getHost().getBaseUrl()+"/rooms/"+room.getRoomId()+")");
 
             PrinterService printerService = getPrinterServiceFromPrinter(res, chatRoom);
+            DashboardService dashboardService = null;
             try {
-                DashboardService dashboardService = getDashboardService(res);
+                dashboardService = getDashboardService(res, ID);
             }
             catch (ApiException e){
-                DashboardService dashboardService = null;
+                e.printStackTrace();
             }
-            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom, filters.toArray(new Filter[0]), printerService);
+            Monitor[] monitors = getMonitors(site, posttype, frequency, chatRoom,
+                    filters.toArray(new Filter[0]), printerService, dashboardService);
             if(monitors==null) {
                 room.send("The only types supported are questions, answers and tags");
             }
@@ -207,14 +209,14 @@ public class BosonBot {
         }
     }
 
-    private DashboardService getDashboardService(Namespace res) throws ApiException {
+    private DashboardService getDashboardService(Namespace res, String ID) throws ApiException {
         DashboardTypes dashboard = res.get("dash");
         if (dashboard==null) {
             return null;
         }
         else {
             switch (dashboard) {
-                case HIGGS: return new HiggsService(dashboardUrl, dashboardApi, dashboardKey);
+                case HIGGS: return new HiggsService(dashboardUrl, dashboardApi, dashboardKey, ID);
                 default: return null;
             }
         }
@@ -289,19 +291,24 @@ public class BosonBot {
     }
 
     private Monitor[] getMonitors(String site, Type posttype, int frequency, ChatRoom chatRoom, Filter[] filters,
-                                  PrinterService printerService) {
+                                  PrinterService printerService, DashboardService dashboardService) {
 
         switch (posttype) {
             case questions:
-                return new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
+                return new Monitor[]{new QuestionMonitor(chatRoom, frequency, site, apiKey, apiToken,
+                        filters, printerService, dashboardService)};
             case answers:
-                return new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
+                return new Monitor[]{new AnswerMonitor(chatRoom, frequency, site, apiKey, apiToken,
+                        filters, printerService, dashboardService)};
             case comments:
-                return new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
+                return new Monitor[]{new CommentMonitor(chatRoom, frequency, site, apiKey, apiToken,
+                        filters, printerService, dashboardService)};
             case posts:
-                return new Monitor[]{new PostMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
+                return new Monitor[]{new PostMonitor(chatRoom, frequency, site, apiKey, apiToken,
+                        filters, printerService, dashboardService)};
             case tags:
-                return new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, apiToken, filters, printerService)};
+                return new Monitor[]{new TagMonitor(chatRoom, frequency, site, apiKey, apiToken,
+                        filters, printerService, dashboardService)};
         }
         return null;
     }
