@@ -1,5 +1,5 @@
 package org.sobotics.boson.framework.services.chat.printers;
 
-public interface SpecialPrinterService <T> extends PrinterService<T>{
-    String print(T content, String message);
+public abstract class SpecialPrinterService <T> extends PrinterService<T>{
+    abstract String print(T content, String dashboard, String intro, String message);
 }

@@ -2,20 +2,22 @@ package org.sobotics.boson.framework.services.chat.printers;
 
 import org.sobotics.boson.framework.model.stackexchange.Tag;
 
-public class NewTagPrinter implements PrinterService<Tag>{
+public class NewTagPrinter extends PrinterService<Tag>{
     private String sitename;
 
     public NewTagPrinter(String sitename) {
         this.sitename = sitename;
     }
 
-    public String print(Tag tag){
-        String s = "[ [Boson](https://git.io/vA9TM) ] New tag " +
-                "[tag:"+tag.getName()+"] ";
 
-        s+="with "+tag.getCount()+" questions";
+    @Override
+    public String print(Tag tag, String dashboard, String intro) {
 
-        return s;
+        String message = "New tag " +
+                "[tag:"+tag.getName()+"] " +
+                "with "+tag.getCount()+" questions";
 
+        return getFinalPrintString(dashboard, intro, message);
     }
+
 }
