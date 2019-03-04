@@ -5,6 +5,7 @@ import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.model.stackexchange.Question;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.printers.PrinterService;
+import org.sobotics.boson.framework.services.dashboard.DashboardService;
 import org.sobotics.boson.framework.services.data.ApiService;
 
 import java.io.IOException;
@@ -16,13 +17,16 @@ public class QuestionMonitor extends Monitor<Question, Question>{
 
     private Instant previousLastActivityDate;
 
-    public QuestionMonitor(ChatRoom room, int frequency, String site, String apiKey, String apiToken, Filter<Question>[] filters, PrinterService<Question> printer) {
-        super(room, frequency, site, apiKey, filters, printer, apiToken);
+    public QuestionMonitor(ChatRoom room, int frequency, String site, String apiKey, String apiToken,
+                           Filter<Question>[] filters, PrinterService<Question> printer,
+                           DashboardService dashboardService) {
+        super(room, frequency, site, apiKey, filters, printer, apiToken, dashboardService);
         previousLastActivityDate = Instant.now().minusSeconds(60);
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, Filter<Question>[] filters, PrinterService<Question> printer, ApiService apiService) throws IOException {
+    protected void monitor(ChatRoom room, String site, Filter<Question>[] filters, PrinterService<Question> printer,
+                           ApiService apiService, DashboardService dashboard) throws IOException {
         List<Question> questions;
         try {
             questions = apiService.getQuestions(site, 1, 100, null);
@@ -39,7 +43,7 @@ public class QuestionMonitor extends Monitor<Question, Question>{
         for (Question question: questions){
             for (Filter<Question> filter: filters){
                 if(filter.filter(question)){
-                    room.getRoom().send(printer.print(question));
+                    room.getRoom().send(getFinalPrintString(printer, dashboard, question));
                 }
             }
         }

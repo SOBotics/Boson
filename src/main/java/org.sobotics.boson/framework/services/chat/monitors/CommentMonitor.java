@@ -1,11 +1,13 @@
 package org.sobotics.boson.framework.services.chat.monitors;
 
+import io.swagger.client.ApiException;
 import org.sobotics.boson.framework.model.chat.ChatRoom;
 import org.sobotics.boson.framework.model.stackexchange.Comment;
 import org.sobotics.boson.framework.services.chat.filters.Filter;
 import org.sobotics.boson.framework.services.chat.filters.SpecialFilter;
 import org.sobotics.boson.framework.services.chat.printers.PrinterService;
 import org.sobotics.boson.framework.services.chat.printers.SpecialPrinterService;
+import org.sobotics.boson.framework.services.dashboard.DashboardService;
 import org.sobotics.boson.framework.services.data.ApiService;
 
 import java.io.IOException;
@@ -19,13 +21,15 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
 
     private Instant previousTime;
 
-    public CommentMonitor(ChatRoom room, int frequency, String site, String apiKey, String apiToken, Filter<Comment>[] filters, PrinterService<Comment> printer) {
-        super(room, frequency, site, apiKey, filters, printer, apiToken);
+    public CommentMonitor(ChatRoom room, int frequency, String site, String apiKey, String apiToken,
+                          Filter<Comment>[] filters, PrinterService<Comment> printer, DashboardService dashboardService) {
+        super(room, frequency, site, apiKey, filters, printer, apiToken, dashboardService);
         previousTime = Instant.now().minusSeconds(frequency);
     }
 
     @Override
-    protected void monitor(ChatRoom room, String site, Filter<Comment>[] filters, PrinterService<Comment> printer, ApiService apiService) throws IOException {
+    protected void monitor(ChatRoom room, String site, Filter<Comment>[] filters, PrinterService<Comment> printer,
+                           ApiService apiService, DashboardService dashboardService) throws IOException {
 
         List<Comment> display = apiService.getComments(site, 1, 100, previousTime);
         Map messages = new HashMap<Long, String>();
@@ -48,13 +52,24 @@ public class CommentMonitor extends Monitor<Comment, Comment>{
             display = tempDisplay;
         }
 
+
         for(Comment comment: display){
+
+            String dashboard = null;
+            if (dashboardService!=null){
+                try {
+                    dashboard = dashboardService.createReport(comment);
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                }
+            }
+
             if(printer instanceof SpecialPrinterService) {
                 SpecialPrinterService specialPrinter = (SpecialPrinterService) printer;
-                room.getRoom().send(specialPrinter.print(comment, (String) messages.get(comment.getCommentId())));
+                room.getRoom().send(specialPrinter.print(comment, dashboard, null, (String) messages.get(comment.getCommentId())));
             }
             else {
-                room.getRoom().send(printer.print(comment));
+                room.getRoom().send(printer.print(comment, dashboard));
             }
         }
 

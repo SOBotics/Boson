@@ -42,7 +42,8 @@ public class AnswerPrinterBot {
         chatRoom.setMessageReplyEventConsumer(new MessageReplyEventListener().getMessageReplyEventListener(room, messageReplyCommands));
 
         Filter[]  filters = {new EmptyFilter<Answer>()};
-        Monitor[] monitors = {new AnswerMonitor(chatRoom, frequency, site, "", "", filters, new GenericContentPrinterService<Answer>(site))};
+        Monitor[] monitors = {new AnswerMonitor(chatRoom, frequency, site, "", "", filters,
+                new GenericContentPrinterService<Answer>(site), null)};
 
         ChatRoomService service = new ChatRoomService(chatRoom, monitors);
         service.initializeService();
