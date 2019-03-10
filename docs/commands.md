@@ -8,35 +8,38 @@ The complete help and usage of the track command is:
 
 
 
-    usage: track [-f [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} ...]]]
-                 [-h] [-n [NAME]] [-p [{ONE_BOX}]] [-r [ROOM]]
-                 [-t [{STACK_OVERFLOW,STACK_EXCHANGE}]]
-                 [-v [VALUE [VALUE ...]]] sitename trackingType frequency
-    
-    Argument Parser for the bot.
-    
-    positional arguments:
-      sitename               Site where the bot has to be run
-      trackingType           Type  of  the  tracker  needed.   Can  be  one  of
-                             {questions,answers,comments,posts,tags}
-      frequency              Frequency of the tracker in seconds
-    
-    named arguments:
-      -f [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} ...]], --filter [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} [{REPUTATION,LENGTH,USER_ID,POST_ID,TAG} ...]]
-                             Set the filters used by the bot
-      -h, --help             Display this message
-      -n [NAME], --name [NAME]
-                             Give a name to  your  bot  (we  will generate a 10
-                             digit value, if you don't)
-      -p [{ONE_BOX}], --printer [{ONE_BOX}]
-                             Set the printer to be used by the bot
-      -r [ROOM], --room [ROOM]
-                             Set the room where it has to run
-      -t [{STACK_OVERFLOW,STACK_EXCHANGE}], --host [{STACK_OVERFLOW,STACK_EXCHANGE}]
-                             Set the chat host of that room
-      -v [VALUE [VALUE ...]], --value [VALUE [VALUE ...]]
-                             Set the value needed for  the filter, depending on
-                             it's type
+     usage: track [-d [{HIGGS}]]
+                  [-f [{REPUTATION,LENGTH,USER_ID,POST_ID,CONTAINS,TAG,BURNED_TAG,HEAT_DETECTOR} [{REPUTATION,LENGTH,USER_ID,POST_ID,CONTAINS,TAG,BURNED_TAG,HEAT_DETECTOR} ...]]]
+                  [-h] [-n [NAME]] [-p [{ONE_BOX,LIST_TAGS,HEAT_DETECTOR}]]
+                  [-r [ROOM]] [-t [{STACK_OVERFLOW,STACK_EXCHANGE}]]
+                  [-v [VALUE [VALUE ...]]] sitename trackingType frequency
+
+     Argument Parser for the bot.
+
+     positional arguments:
+       sitename               Site where the bot has to be run
+       trackingType           Type  of  the  tracker  needed.   Can  be  one  of
+                              {questions,answers,comments,posts,tags}
+       frequency              Frequency of the tracker in seconds
+
+     named arguments:
+       -d [{HIGGS}], --dash [{HIGGS}]
+                              Set the dashboard to be used by the bot
+       -f [{REPUTATION,LENGTH,USER_ID,POST_ID,CONTAINS,TAG,BURNED_TAG,HEAT_DETECTOR} [{REPUTATION,LENGTH,USER_ID,POST_ID,CONTAINS,TAG,BURNED_TAG,HEAT_DETECTOR} ...]], --filter [{REPUTATION,LENGTH,USER_ID,POST_ID,CONTAINS,TAG,BURNED_TAG,HEAT_DETECTOR} [{REPUTATION,LENGTH,USER_ID,POST_ID,CONTAINS,TAG,BURNED_TAG,HEAT_DETECTOR} ...]]
+                              Set the filters used by the bot
+       -h, --help             Display this message
+       -n [NAME], --name [NAME]
+                              Give a name to  your  bot  (we  will generate a 10
+                              digit value, if you don't)
+       -p [{ONE_BOX,LIST_TAGS,HEAT_DETECTOR}], --printer [{ONE_BOX,LIST_TAGS,HEAT_DETECTOR}]
+                              Set the printer to be used by the bot
+       -r [ROOM], --room [ROOM]
+                              Set the room where it has to run
+       -t [{STACK_OVERFLOW,STACK_EXCHANGE}], --host [{STACK_OVERFLOW,STACK_EXCHANGE}]
+                              Set the chat host of that room
+       -v [VALUE [VALUE ...]], --value [VALUE [VALUE ...]]
+                              Set the value needed for  the filter, depending on
+                              it's type
                              
 
 ## Example Usage
@@ -67,6 +70,10 @@ Thanks to it being very generic, Boson usually overwhelms users with it's availa
  
        @Boson track interpersonal.stackexchange.com tags 21600
        
+ - Tracking heated comments on The Workplace every 10 minutes, and display it using the Higgs Dashboard. 
+ 
+       @Bos track workplace comments 1500 -f HEAT_DETECTOR -v 5 -p HEAT_DETECTOR -d HIGGS 
+
 
 ## Content types
 
@@ -98,6 +105,7 @@ Boson is still under active development. As of now, the available content types 
  3. POST_ID (The ID of the post on which you need to track comments. Should be a number)
  4. USER_ID (The ID of the user whose posts you need to track. Should be a number)
  5. TAG (The name of the tag which you need to filter the questions. Should be a ; separated list of tag names)
+ 6. HEAT_DETECTOR (The value of the comment heat at which it should be filtered. Should be a number)
  
  ### Using filters to obtain the data you need
  
